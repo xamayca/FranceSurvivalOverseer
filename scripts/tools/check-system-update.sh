@@ -19,6 +19,7 @@ else
   log "[OK] AUCUNE MISE À JOUR DISPONIBLE POUR VOTRE SYSTÈME."
   return 0
 fi
+
 # Si des mises à jour sont disponibles, procéder à leur installation
 if apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y; then
   log "[SUCCESS] MISES À JOUR INSTALLÉES AVEC SUCCÈS SUR VOTRE SYSTÈME."

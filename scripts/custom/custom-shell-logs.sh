@@ -2,10 +2,6 @@
 set -euo pipefail
 
 log() {
-    # Crée une ligne de séparation avec des tirets
-    local separator_line
-    separator_line=$(printf '\033[1;30m%*s\033[0m\n' "$(tput cols)" '' | tr ' ' '-')
-
     # Définit les codes de couleur pour différents types de messages
     declare -A color_codes
     local color_codes=(
@@ -16,6 +12,15 @@ log() {
       ["orange"]='\033[1;33m'  # Jaune
       ["red"]='\033[1;31m'  # Rouge
     )
+
+    # Crée une ligne de séparation avec des tirets
+    local terminal_width
+    terminal_width=$(tput cols)
+    local separator_line="\033[1;30m"
+    for ((i = 0; i < terminal_width; i++)); do
+        separator_line="${separator_line}-"
+    done
+    separator_line="${separator_line}\033[0m"
 
     # Définit les valeurs par défaut
     local color=${color_codes["default"]} # Couleur par défaut
@@ -34,7 +39,7 @@ log() {
     [[ $message == *\[ATTENTION\]* ]] && { color=${color_codes["red"]}; emoji="🟧"; } # Rouge
 
     # Affiche le message avec la couleur et l'émoji appropriés
-    printf "%s\n" "$separator_line"
-    printf "${bold}${color}%s %s\033[0m\n" "$emoji" "$message"
-    printf "%s\n" "$separator_line"
+    echo -e "$separator_line"
+    echo -e "${bold}${color}${emoji} ${message}\033[0m"
+    echo -e "$separator_line"
 }

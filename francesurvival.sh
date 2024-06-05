@@ -12,7 +12,6 @@ load_config_files "$(dirname "$0")/config/server.cfg"
 load_config_files "$(dirname "$0")/config/install.cfg"
 load_config_files "$(dirname "$0")/config/common.cfg"
 
-
 installation_header
 
 check_system_update

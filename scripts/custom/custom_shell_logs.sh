@@ -46,7 +46,7 @@ log() {
         color="${BBLUE}"  # Bold blue
         emoji="🟦"
     elif [[ $message == *\[ATTENTION\]* ]]; then
-        color="${BYELLOW}"  # Bold yellow
+        color="${BRED}"  # Bold yellow
         emoji="🟧"
     fi
 

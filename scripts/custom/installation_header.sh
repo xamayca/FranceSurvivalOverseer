@@ -6,17 +6,17 @@ installation_header() {
   clear
 
   # Afficher le logo du script (ASCII Art)
-    text_center "${BBLUE} ______ _____            _   _  _____ ______    _____ _    _ _______      _________      __     _      "
-    text_center "${BBLUE}|  ____|  __ \     /\   | \ | |/ ____|  ____|  / ____| |  | |  __ \ \    / /_   _\ \    / /\   | |     "
-    text_center "${BWHITE}| |__  | |__) |   /  \  |  \| | |    | |__    | (___ | |  | | |__) \ \  / /  | |  \ \  / /  \  | |     "
-    text_center "${BWHITE}|  __| |  _  /   / /\ \ | . \` | |    |  __|    \___ \| |  | |  _  / \ \/ /   | |   \ \/ / /\ \ | |     "
-    text_center "${BRED}| |    | | \ \  / ____ \| |\  | |____| |____   ____) | |__| | | \ \  \  /   _| |_   \  / ____ \| |____ "
-    text_center "${BRED}|_|    |_|  \_\/_/    \_\_| \_|\_____|______| |_____/ \____/|_|  \_\  \/   |_____|   \/_/    \_\______|"
-    text_center "${BMAGENTA}    _    ____   ____ _____ _   _ ____  _____ ____    ____  _____ ______     _______ ____    ____   ____ ____  ___ ____ _____ "
-    text_center "${BMAGENTA}   / \  / ___| / ___| ____| \ | |  _ \| ____|  _ \  / ___|| ____|  _ \ \   / / ____|  _ \  / ___| / ___|  _ \|_ _|  _ \_   _|"
-    text_center "${BMAGENTA}  / _ \ \___ \| |   |  _| |  \| | | | |  _| | | | | \___ \|  _| | |_) \ \ / /|  _| | |_) | \___ \| |   | |_) || || |_) || |  "
-    text_center "${BMAGENTA} / ___ \ ___) | |___| |___| |\  | |_| | |___| |_| |  ___) | |___|  _ < \ V / | |___|  _ <   ___) | |___|  _ < | ||  __/ | |  "
-    text_center "${BMAGENTA}/_/   \_\____/ \____|_____|_| \_|____/|_____|____/  |____/|_____|_| \_\ \_/  |_____|_| \_\ |____/ \____|_| \_\___|_|    |_|  "
+  text_center "${BBLUE} ______ _____            _   _  _____ ______    _____ _    _ _______      _________      __     _      "
+  text_center "${BBLUE}|  ____|  __ \     /\   | \ | |/ ____|  ____|  / ____| |  | |  __ \ \    / /_   _\ \    / /\   | |     "
+  text_center "${BWHITE}| |__  | |__) |   /  \  |  \| | |    | |__    | (___ | |  | | |__) \ \  / /  | |  \ \  / /  \  | |     "
+  text_center "${BWHITE}|  __| |  _  /   / /\ \ | . \` | |    |  __|    \___ \| |  | |  _  / \ \/ /   | |   \ \/ / /\ \ | |     "
+  text_center "${BRED}| |    | | \ \  / ____ \| |\  | |____| |____   ____) | |__| | | \ \  \  /   _| |_   \  / ____ \| |____ "
+  text_center "${BRED}|_|    |_|  \_\/_/    \_\_| \_|\_____|______| |_____/ \____/|_|  \_\  \/   |_____|   \/_/    \_\______|"
+  text_center "${BMAGENTA}    _    ____   ____ _____ _   _ ____  _____ ____    ____  _____ ______     _______ ____    ____   ____ ____  ___ ____ _____ "
+  text_center "${BMAGENTA}   / \  / ___| / ___| ____| \ | |  _ \| ____|  _ \  / ___|| ____|  _ \ \   / / ____|  _ \  / ___| / ___|  _ \|_ _|  _ \_   _|"
+  text_center "${BMAGENTA}  / _ \ \___ \| |   |  _| |  \| | | | |  _| | | | | \___ \|  _| | |_) \ \ / /|  _| | |_) | \___ \| |   | |_) || || |_) || |  "
+  text_center "${BMAGENTA} / ___ \ ___) | |___| |___| |\  | |_| | |___| |_| |  ___) | |___|  _ < \ V / | |___|  _ <   ___) | |___|  _ < | ||  __/ | |  "
+  text_center "${BMAGENTA}/_/   \_\____/ \____|_____|_| \_|____/|_____|____/  |____/|_____|_| \_\ \_/  |_____|_| \_\ |____/ \____|_| \_\___|_|    |_|  "
 
   echo
   text_center "${BGREY}[ Développé par xamayca, pour la communauté France Survival ]${RESET}"
@@ -25,17 +25,23 @@ installation_header() {
   echo
   echo
   text_center "${BWHITE}VISITEZ NOTRE SITE WEB:${RESET}"
-  text_center "${UBLUE}${WEBSITE_URL}/${RESET}\n"
+  text_center "${UBLUE}${WEBSITE_URL}/${RESET}${JUMP_LINE}"
+  echo
   text_center "${BWHITE}CONSULTEZ NOTRE DÉPÔT GITHUB:${RESET}"
-  text_center "${UBLUE}${GITHUB_URL}${RESET}\n"
+  text_center "${UBLUE}${GITHUB_URL}${RESET}${JUMP_LINE}"
+  echo
   text_center "${BWHITE}REJOIGNEZ NOTRE COMMUNAUTÉ DISCORD DE JOUEURS FRANÇAIS ARK :${RESET}"
-  text_center "${UBLUE}${DISCORD_URL}${RESET}\n"
+  text_center "${UBLUE}${DISCORD_URL}${RESET}${JUMP_LINE}"
+  echo
   text_center "${BWHITE}SUIVEZ-NOUS SUR INSTAGRAM:${RESET}"
-  text_center "${UBLUE}${INSTAGRAM_URL}${RESET}\n"
+  text_center "${UBLUE}${INSTAGRAM_URL}${RESET}${JUMP_LINE}"
+  echo
   text_center "${BWHITE}AIMEZ NOTRE PAGE FACEBOOK:${RESET}"
-  text_center "${UBLUE}${FACEBOOK_URL}${RESET}\n"
+  text_center "${UBLUE}${FACEBOOK_URL}${RESET}${JUMP_LINE}${JUMP_LINE}"
+  echo
 
   if [ "$SHOW_HEADER_SYSTEM_INFO" == "True" ]; then
+    echo
     text_center "${BGREY} Système d'exploitation: $(grep PRETTY_NAME /etc/os-release | cut -d= -f2- | tr -d '\"')"
     text_center "Version du noyau: $(uname -r)"
     text_center "Architecture du système: $(uname -m)"

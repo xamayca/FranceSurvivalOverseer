@@ -34,6 +34,9 @@ text_center_half() {
     local LEFT_LINE="${LEFT_LINES[i]:-}"
     local RIGHT_LINE="${RIGHT_LINES[i]:-}"
 
+      LEFT_LINE=$(printf "%b" "${LEFT_LINE}")
+      RIGHT_LINE=$(printf "%b" "${RIGHT_LINE}")
+
     # Supprime les codes d'échappement ANSI avant de calculer la longueur de la ligne
     local LEFT_LINE_LENGTH
     LEFT_LINE_LENGTH=$(echo -e "$LEFT_LINE" | sed 's/\x1b\[[0-9;]*m//g' | wc -c)

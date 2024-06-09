@@ -77,65 +77,35 @@ check_if_package_exist() {
 dependencies_options() {
   local CROSS_MARK="❌"
   local CHECK_MARK="✅"
-  local DEPENDENCIES_NAME="$1"
-  local DESCRIPTION="${DEPENDENCIES_DESCRIPTIONS[$DEPENDENCIES_NAME]}"
   local OPTION_NUMBER=1
+  local OPTION=()
 
-  # Boucle pour incrémenter le numéro de l'option
-  for package in "${DEPENDENCIES[@]}"; do
-    if [ "$package" == "$DEPENDENCIES_NAME" ]; then
-      break
+  for DEPENDENCIES_NAME in "${!DEPENDENCIES_DESCRIPTIONS[@]}"; do
+    DESCRIPTION="${DEPENDENCIES_DESCRIPTIONS[$DEPENDENCIES_NAME]}"
+
+    if check_if_package_exist "$DEPENDENCIES_NAME"; then
+      STATUS="${GREEN}[ INSTALLÉ $CHECK_MARK ]${RESET}${JUMP_LINE}"
+    else
+      STATUS="${YELLOW}[ NON INSTALLÉ ${BLINK_START}$CROSS_MARK${BLINK_END} ]${RESET}${JUMP_LINE}"
     fi
+
+    # Construire les options du menu des dépendances
+    option="${BMAGENTA}[$OPTION_NUMBER]${RESET} ${DEPENDENCIES_NAME^^} $STATUS"
+    option+="${BBLUE}[ $DESCRIPTION ]${RESET}${JUMP_LINE}${JUMP_LINE}${JUMP_LINE}${JUMP_LINE}"
+
     OPTION_NUMBER=$((OPTION_NUMBER + 1))
+    OPTION+=("$option")
   done
 
-  # Vérifier si le paquet est installé ou non et afficher le statut correspondant avec la couleur appropriée
-  if check_if_package_exist "$DEPENDENCIES_NAME"; then
-    text_center "${BMAGENTA}[$OPTION_NUMBER] ${RESET}${DEPENDENCIES_NAME^^} ${GREEN}[ INSTALLÉ $CHECK_MARK ]${RESET}\n"
-    text_center "${BBLUE} [ $DESCRIPTION ]${RESET}\n\n"
-  else
-    text_center "${BMAGENTA}[$OPTION_NUMBER] ${RESET}${DEPENDENCIES_NAME^^} ${YELLOW}[ NON INSTALLÉ ${BLINK_START}$CROSS_MARK${BLINK_END} ]${RESET}\n"
-    text_center "${BBLUE} [ $DESCRIPTION ]${RESET}\n\n"
-  fi
-}
+    text_center_half "${OPTION[1]}" "${OPTION[2]}"
+    text_center_half "${OPTION[3]}" "${OPTION[4]}"
+    text_center_half "${OPTION[5]}" "${OPTION[6]}"
 
-# Fonction pour afficher le titre du menu des dépendances
-dependencies_menu_title(){
-  separator_line=$(printf "${GREY}%*s${RESET}\n" "$(tput cols)" '' | tr ' ' "-")
-  echo -e "${separator_line}"
-  echo
-  text_center "MENU DE VÉRIFICATION & D'INSTALLATION DES DÉPENDANCES DU SCRIPT"
-  echo
-  echo -e "${separator_line}"
-}
-
-# Fonction pour afficher l'aide du menu des dépendances
-dependencies_menu_help(){
-  text_center "${BGREY}Ce menu vous permet de vérifier et d'installer les dépendances nécessaires pour le script."
-  text_center "Vous pouvez choisir d'installer toutes les dépendances en une seule fois ou de les installer une par une."
-  text_center "Veuillez sélectionner une option pour continuer ou attendre 10 secondes pour tout installer automatiquement.${RESET}"
-  echo -e "${separator_line}"
-  echo
-  echo
-}
-
-# Fonction pour afficher le menu des dépendances
-dependencies_menu(){
-  clear
-  dependencies_menu_title
-  dependencies_menu_help
-  # Utilisez DEPENDENCIES pour vérifier chaque paquet
-  for package in "${DEPENDENCIES[@]}"; do
-    dependencies_options "$package"
-  done
-
-  dependencies_question
-}
-
-dependencies_question(){
+  # Get the user's choice
   local user_input
   read -rp "CHOISISSEZ UNE OPTION POUR INSTALLER UNE DÉPENDANCE OU PATIENTEZ 10 SECONDES POUR TOUT INSTALLER AUTOMATIQUEMENT: " -t 10 user_input
-  echo
+
+  # Handle the user's choice
   case $user_input in
     1)
       install_timezone
@@ -168,7 +138,42 @@ dependencies_question(){
       install_all_dependencies
       ;;
     *)
-      install_all_dependencies
+      echo "Invalid option. Please choose a valid number."
       ;;
   esac
 }
+
+
+# Fonction pour afficher le titre du menu des dépendances
+dependencies_menu_title(){
+  separator_line=$(printf "${GREY}%*s${RESET}\n" "$(tput cols)" '' | tr ' ' "-")
+  echo -e "${separator_line}"
+  echo
+  text_center "MENU DE VÉRIFICATION & D'INSTALLATION DES DÉPENDANCES DU SCRIPT"
+  echo
+  echo -e "${separator_line}"
+}
+
+# Fonction pour afficher l'aide du menu des dépendances
+dependencies_menu_help(){
+  text_center "${BGREY}Ce menu vous permet de vérifier et d'installer les dépendances nécessaires pour le script."
+  text_center "Vous pouvez choisir d'installer toutes les dépendances en une seule fois ou de les installer une par une."
+  text_center "Veuillez sélectionner une option pour continuer ou attendre 10 secondes pour tout installer automatiquement.${RESET}"
+  echo -e "${separator_line}"
+  echo
+  echo
+}
+
+# Fonction pour afficher le menu des dépendances
+dependencies_menu(){
+  clear
+  dependencies_menu_title
+  dependencies_menu_help
+
+  dependencies_options
+
+
+
+}
+
+

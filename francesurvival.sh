@@ -1,12 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-source "$(dirname "$0")/scripts/tools/load-config-files.sh"
-source "$(dirname "$0")/scripts/custom/custom-shell-logs.sh"
-source "$(dirname "$0")/scripts/custom/installation-header.sh"
-source "$(dirname "$0")/scripts/tools/check-system-update.sh"
-source "$(dirname "$0")/scripts/tools/text-center.sh"
-source "$(dirname "$0")/scripts/menus/dependencies-menu.sh"
+source "$(dirname "$0")/scripts/tools/load_config_files.sh"
+source "$(dirname "$0")/scripts/tools/format_text.sh"
+source "$(dirname "$0")/scripts/custom/custom_shell_logs.sh"
+source "$(dirname "$0")/scripts/custom/installation_header.sh"
+source "$(dirname "$0")/scripts/tools/system_update.sh"
+source "$(dirname "$0")/scripts/menus/dependencies_menu.sh"
 
 load_config_files "$(dirname "$0")/config/server.cfg"
 load_config_files "$(dirname "$0")/config/install.cfg"

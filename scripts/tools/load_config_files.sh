@@ -22,8 +22,8 @@ load_config_files() {
   log "[LOG] NETTOYAGE DU FICHIER DE CONFIGURATION ${config_file_name^^} ..."
 
 
-  if tr -d '\r' < "$config_file_path" > temp && mv temp "$config_file_path"; then
-      log "[SUCCESS] LE FICHIER DE CONFIGURATION ${config_file_name^^} A ÉTÉ NETTOYÉ AVEC SUCCÈS."
+  if perl -pi -e 's/\r$//' "$config_file_path"; then
+    log "[SUCCESS] LE FICHIER DE CONFIGURATION ${config_file_name^^} A ÉTÉ NETTOYÉ AVEC SUCCÈS."
   else
     log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DU NETTOYAGE DU FICHIER DE CONFIGURATION ${config_file_name^^}."
     log "$config_file_error_msg"

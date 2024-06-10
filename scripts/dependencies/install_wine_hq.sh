@@ -1,8 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-source "$SCRIPTS_DIR/tools/system_update.sh"
-
 install_wine_hq(){
 
   log "[LOG] VÉRIFICATION DE L'INSTALLATION DE WINE HQ..."
@@ -80,6 +78,7 @@ install_wine_hq(){
       log "[WARNING] WINE HQ N'EST PAS INSTALLÉ SUR CE SYSTÈME, INSTALLATION EN COURS..."
       if sudo apt-get install --install-recommends winehq-stable -y; then
         log "[SUCCESS] WINE HQ A ÉTÉ INSTALLÉ AVEC SUCCÈS."
+        sudo wine --version
       else
         log "[ERROR] ERREUR LORS DE L'INSTALLATION DE WINE HQ."
         log "[DEBUG] ESSAYEZ D'INSTALLER WINE HQ MANUELLEMENT AVEC LA COMMANDE: sudo apt-get install --install-recommends winehq-stable -y"

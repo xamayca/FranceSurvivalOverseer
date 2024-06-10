@@ -16,6 +16,7 @@ install_sudo(){
     fi
   else
     log "[OK] LE PAQUET SUDO EST DÉJÀ INSTALLÉ SUR LE SYSTÈME."
+    sudo -V | grep -o "Sudo version [0-9.]*"
   fi
 
 }

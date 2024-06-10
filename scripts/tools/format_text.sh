@@ -1,16 +1,21 @@
 #!/bin/bash
 set -euo pipefail
 
-text_center(){
-  local TERMINAL_WIDTH
-  TERMINAL_WIDTH=$(tput cols)
+text_center() {
+    [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 1
 
-  IFS=$'\n'   # Set le délimiteur au caractère de nouvelle ligne
-  for LINE in $(echo -e "$1"); do
-    LINE_LENGTH=$(echo -e "$LINE" | sed 's/\x1b\[[0-9;]*m//g' | wc -c)
-    PADDING=$(( (TERMINAL_WIDTH - LINE_LENGTH) / 2 ))
-    printf "%*s%s\n" $PADDING "" "$(echo -e "$LINE")"
-  done
+    declare input="${1}" filler out no_ansi_out
+    no_ansi_out="$(echo -e "${input}" | sed 's/\x1b\[[0-9;]*m//g')"
+    declare -i str_len=${#no_ansi_out}
+    declare -i filler_len="$(((COLUMNS - str_len) / 2))"
+
+    [[ $filler_len -lt 0 ]] && printf "%s\n" "${input}" && return 0
+
+    filler="$(printf "%${filler_len}s")"
+    out="${filler}${input}${filler}"
+    printf "%s\n" "$(echo -e "${out}")"
+
+    return 0
 }
 
 text_center_half() {

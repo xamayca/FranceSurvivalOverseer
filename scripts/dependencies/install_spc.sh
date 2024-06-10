@@ -16,7 +16,7 @@ install_spc(){
      exit 1
    fi
  else
-   log "[OK] LE PAQUET SOFTWARE PROPERTIES COMMON EST DÉJÀ INSTALLÉ SUR LE SYSTÈME."
+   log "[OK] LE PAQUET SOFTWARE PROPERTIES COMMON EST DÉJÀ INSTALLÉ SUR $HOSTNAME."
    dpkg -s software-properties-common | grep 'Version'
  fi
 

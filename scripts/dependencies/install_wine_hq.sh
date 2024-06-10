@@ -19,7 +19,7 @@ install_wine_hq(){
       exit 1
     fi
 
-    log "[LOG] VÉRIFICATION DE L'EXISTENCE DU RÉPERTOIRE POUR LES CLÉS APT..."
+    log "[LOG] VÉRIFICATION & INSTALLATION DES CLÉS APT POUR WINE HQ SUR $HOSTNAME EN COURS..."
     # Vérifier si le répertoire pour les clés APT existe et a les bonnes permissions
     if [[ -d /etc/apt/keyrings ]]; then
       log "[OK] RÉPERTOIRE POUR LES CLÉS APT DÉJÀ EXISTANT SUR $HOSTNAME."
@@ -37,14 +37,14 @@ install_wine_hq(){
       fi
     fi
 
-    log "[LOG] VÉRIFICATION DE L'EXISTENCE DE LA CLÉ WINE HQ..."
+    log "[LOG] VÉRIFICATION & TÉLÉCHARGEMENT DE LA CLÉ WINE HQ SUR $HOSTNAME EN COURS..."
     # Vérifier si la clé Wine HQ est déjà ajoutée
     if [[ -f /etc/apt/keyrings/winehq-archive.key ]]; then
-      log "[OK] LA CLÉ WINE HQ EST DÉJÀ AJOUTÉE."
+      log "[OK] LA CLÉ WINE HQ EST DÉJÀ AJOUTÉE SUR $HOSTNAME."
     else
-      log "[WARNING] LA CLÉ WINE HQ N'EST PAS AJOUTÉE, TÉLÉCHARGEMENT ET AJOUT EN COURS..."
+      log "[WARNING] LA CLÉ WINE HQ N'EST PAS AJOUTÉE SUR $HOSTNAME, TÉLÉCHARGEMENT ET AJOUT EN COURS..."
       if sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key; then
-        log "[SUCCESS] CLE WINE HQ TELECHARGEE ET AJOUTEE AVEC SUCCES."
+        log "[SUCCESS] CLE WINE HQ TELECHARGEE ET AJOUTEE AVEC SUCCES SUR $HOSTNAME."
       else
         log "[ERROR] ERREUR LORS DU TELECHARGEMENT ET DE L'AJOUT DE LA CLE WINE HQ."
         log "[DEBUG] VEUILLER AJOUTER LA CLE MANUELLEMENT AVEC LA COMMANDE: sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key"
@@ -69,7 +69,7 @@ install_wine_hq(){
 
     check_system_update
 
-    log "[LOG] VÉRIFICATION & INSTALLATION DE WINE HQ EN COURS SUR LE SYSTÈME..."
+    log "[LOG] VÉRIFICATION & INSTALLATION DE WINE HQ EN COURS SUR $HOSTNAME EN COURS..."
     # Vérifier si Wine HQ est déjà installé sur le système
     if command -v wine &>/dev/null; then
       log "[OK] WINE HQ EST DÉJÀ INSTALLÉ SUR CE SYSTÈME."

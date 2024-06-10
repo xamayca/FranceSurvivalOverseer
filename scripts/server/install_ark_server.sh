@@ -1,0 +1,28 @@
+#!/bin/bash
+set -euo pipefail
+
+install_ark_server(){
+
+  log "[LOG] VÉRIFICATION & INSTALLATION DU SERVEUR ARK: SURVIVAL ASCENDED SUR $HOSTNAME DANS $ARK_SERVER_PATH..."
+
+  # Si pas d'éxecutable, on installe le serveur
+  if [[ ! -x "$ARK_SERVER_EXECUTABLE_PATH" ]]; then
+    log "[WARNING] LE SERVEUR ARK: SURVIVAL ASCENDED N'EST PAS INSTALLÉ DANS $ARK_SERVER_PATH, INSTALLATION EN COURS..."
+    log "[LOG] TÉLÉCHARGEMENT DU SERVEUR ARK: SURVIVAL ASCENDED..."
+
+    if sudo -u "$USER_ACCOUNT" "$STEAM_CMD_PATH" +force_install_dir "$ARK_SERVER_PATH" +login anonymous +app_update "$ARK_APP_ID" validate +quit; then
+      log "[SUCCESS] LE SERVEUR ARK: SURVIVAL ASCENDED A ÉTÉ INSTALLÉ AVEC SUCCÈS DANS $ARK_SERVER_PATH."
+      ls -l "$ARK_SERVER_PATH"
+
+    else
+      log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE L'INSTALLATION DU SERVEUR ARK: SURVIVAL ASCENDED."
+      log "[DEBUG] VEUILLEZ ESSAYER D'INSTALLER LE SERVEUR ARK: SURVIVAL ASCENDED MANUELLEMENT AVEC LA COMMANDE SUIVANTE:"
+      log "[DEBUG] sudo -u $USER_ACCOUNT $STEAM_CMD_PATH +force_install_dir $ARK_SERVER_PATH +login anonymous +app_update $ARK_APP_ID validate +quit"
+      exit 1
+    fi
+
+  else
+    log "[OK] LE SERVEUR ARK: SURVIVAL ASCENDED EST DÉJÀ INSTALLÉ DANS $ARK_SERVER_PATH SUR $HOSTNAME."
+  fi
+
+}

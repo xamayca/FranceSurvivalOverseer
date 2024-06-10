@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-grant_sudo(){
+user_grant_sudo(){
 
   log "[LOG] VÉRIFICATION & AJOUT DE L'UTILISATEUR $USER_ACCOUNT AU GROUPE SUDO EN COURS SUR $HOSTNAME..."
 

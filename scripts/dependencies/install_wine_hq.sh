@@ -1,13 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
+source "$SCRIPTS_DIR/tools/system_update.sh"
+
 install_wine_hq(){
 
   log "[LOG] VÉRIFICATION DE L'INSTALLATION DE WINE HQ..."
 
   if command -v wine &>/dev/null; then
-    log "[OK] WINE HQ EST DÉJÀ INSTALLÉ SUR CE SYSTÈME."
-    sudo wine --version
+    log "[OK] WINE HQ EST DÉJÀ INSTALLÉ SUR VOTRE SYSTÈME."
+    wine --version
   else
     log "[WARNING] WINE HQ N'EST PAS INSTALLÉ SUR VOTRE SYSTÈME."
     log "[LOG] VÉRIFICATION DE LA VERSION DE DEBIAN..."
@@ -15,19 +17,21 @@ install_wine_hq(){
       echo "Version de Debian: $debian_version"
     else
       log "[ERROR] LA VERSION DE DEBIAN N'EST PAS BOOKWORM, LE SCRIPT VA SE TERMINER."
+      log "[DEBUG] VEUILLEZ UTILISER UNE VERSION DE DEBIAN BOOKWORM POUR CONTINUER."
       exit 1
     fi
 
     log "[LOG] VÉRIFICATION DE L'EXISTENCE DU RÉPERTOIRE POUR LES CLÉS APT..."
     # Vérifier si le répertoire pour les clés APT existe et a les bonnes permissions
     if [[ -d /etc/apt/keyrings ]]; then
-      log "[OK] RÉPERTOIRE POUR LES CLÉS APT DÉJÀ EXISTANT."
+      log "[OK] RÉPERTOIRE POUR LES CLÉS APT DÉJÀ EXISTANT SUR CE SYSTÈME."
     else
       log "[WARNING] RÉPERTOIRE POUR LES CLÉS APT N'EXISTE PAS, CRÉATION EN COURS..."
       if sudo mkdir -p -m 755 /etc/apt/keyrings; then
         log "[SUCCESS] RÉPERTOIRE POUR LES CLÉS APT CRÉÉ AVEC SUCCÈS."
       else
         log "[ERROR] ERREUR LORS DE LA CRÉATION DU RÉPERTOIRE POUR LES CLÉS APT."
+        log "[DEBUG] VEUILLEZ CRÉER LE RÉPERTOIRE MANUELLEMENT AVEC LA COMMANDE: sudo mkdir -p -m 755 /etc/apt/keyrings"
         if [[ -d /etc/apt/keyrings ]]; then
           sudo rm -rf /etc/apt/keyrings
         fi
@@ -45,6 +49,7 @@ install_wine_hq(){
         log "[SUCCESS] CLE WINE HQ TELECHARGEE ET AJOUTEE AVEC SUCCES."
       else
         log "[ERROR] ERREUR LORS DU TELECHARGEMENT ET DE L'AJOUT DE LA CLE WINE HQ."
+        log "[DEBUG] VEUILLER AJOUTER LA CLE MANUELLEMENT AVEC LA COMMANDE: sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key"
         exit 1
       fi
     fi
@@ -59,26 +64,12 @@ install_wine_hq(){
         log "[SUCCESS] FICHIER SOURCES.LIST POUR WINE HQ TÉLÉCHARGÉ ET AJOUTÉ AVEC SUCCÈS."
       else
         log "[ERROR] ERREUR LORS DU TÉLÉCHARGEMENT ET DE L'AJOUT DU FICHIER SOURCES.LIST POUR WINE HQ."
+        log "[DEBUG] VEUILLEZ AJOUTER LE FICHIER MANUELLEMENT AVEC LA COMMANDE: sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources"
         exit 1
       fi
     fi
 
-    log "[LOG] VÉRIFICATION DE L'ARCHITECTURE 32 BITS..."
-    # Vérifier si l'architecture 32 bits est activée
-    if dpkg --print-foreign-architectures grep -q "i386"; then
-      log "[OK] L'ARCHITECTURE 32 BITS EST DÉJÀ ACTIVÉE."
-    else
-      log "[WARNING] L'ARCHITECTURE 32 BITS N'EST PAS ACTIVÉE, ACTIVATION EN COURS..."
-      # Activer l'architecture 32 bits
-      if sudo dpkg --add-architecture i386; then
-        log "[SUCCESS] L'ARCHITECTURE 32 BITS A ÉTÉ ACTIVÉE AVEC SUCCÈS."
-      else
-        log "[ERROR] ERREUR LORS DE L'ACTIVATION DE L'ARCHITECTURE 32 BITS."
-        exit 1
-      fi
-    fi
-
-    system_update
+    check_system_update
 
     log "[LOG] VÉRIFICATION DE L'INSTALLATION DE WINE HQ..."
     # Vérifier si Wine HQ est déjà installé sur le système
@@ -91,6 +82,7 @@ install_wine_hq(){
         log "[SUCCESS] WINE HQ A ÉTÉ INSTALLÉ AVEC SUCCÈS."
       else
         log "[ERROR] ERREUR LORS DE L'INSTALLATION DE WINE HQ."
+        log "[DEBUG] ESSAYEZ D'INSTALLER WINE HQ MANUELLEMENT AVEC LA COMMANDE: sudo apt-get install --install-recommends winehq-stable -y"
         exit 1
       fi
     fi

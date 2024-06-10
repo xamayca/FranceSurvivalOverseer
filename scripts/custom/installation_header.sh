@@ -37,7 +37,7 @@ installation_header() {
   text_center "${UBLUE}${INSTAGRAM_URL}${RESET}${JUMP_LINE}"
   echo
   text_center "${BWHITE}AIMEZ NOTRE PAGE FACEBOOK:${RESET}"
-  text_center "${UBLUE}${FACEBOOK_URL}${RESET}${JUMP_LINE}${JUMP_LINE}"
+  text_center "${UBLUE}${FACEBOOK_URL}${RESET}${JUMP_LINE}"
   echo
 
   if [ "$SHOW_HEADER_SYSTEM_INFO" == "True" ]; then
@@ -47,8 +47,8 @@ installation_header() {
     text_center "Architecture du système: $(uname -m)"
     text_center "Utilisateur actuel: $USER Hôte actuel: $HOSTNAME"
     text_center "PID du script: $$"
-    text_center "PID du processus parent: $PPID"
-    text_center "Date et heure actuelles: $(date)"
+    text_center "PID du processus parent: $PPID ${JUMP_LINE}"
+    text_center "Date et heure actuelles: $(date) ${JUMP_LINE}"
     text_center "Utilisation de la mémoire: $(free -h | awk '/^Mem/ {print $3 "/" $2}')"
     text_center "Utilisation de l'espace disque: $(df -h | awk '$NF=="/"{print $3 "/" $2}')"
     text_center "Nombre de processeurs: $(nproc)"

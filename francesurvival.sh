@@ -1,35 +1,44 @@
 #!/bin/bash
 set -euo pipefail
 
-# Load custom scripts and tools
-source "$(dirname "$0")/scripts/tools/load_config_files.sh"
-source "$(dirname "$0")/scripts/tools/format_text.sh"
-source "$(dirname "$0")/scripts/custom/custom_shell_logs.sh"
-source "$(dirname "$0")/scripts/custom/installation_header.sh"
-source "$(dirname "$0")/scripts/tools/system_update.sh"
+# Définir le chemin du répertoire des scripts & tools
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts"
+CONFIG_DIR="$(dirname "$0")/config"
 
-# Load dependencies scripts install
-source "$(dirname "$0")/scripts/dependencies/install_timezone.sh"
-source "$(dirname "$0")/scripts/dependencies/install_sudo.sh"
-source "$(dirname "$0")/scripts/dependencies/install_curl.sh"
-source "$(dirname "$0")/scripts/dependencies/install_jq.sh"
-source "$(dirname "$0")/scripts/dependencies/install_ip_tables.sh"
-source "$(dirname "$0")/scripts/dependencies/install_spc.sh"
-source "$(dirname "$0")/scripts/dependencies/install_wine_hq.sh"
+# Charge les scripts de d'outils et de personnalisation
+source "$SCRIPTS_DIR/tools/load_config_files.sh"
+source "$SCRIPTS_DIR/tools/format_text.sh"
+source "$SCRIPTS_DIR/custom/custom_shell_logs.sh"
+source "$SCRIPTS_DIR/custom/installation_header.sh"
+source "$SCRIPTS_DIR/tools/system_update.sh"
 
-load_config_files "$(dirname "$0")/config/server.cfg"
-load_config_files "$(dirname "$0")/config/install.cfg"
-load_config_files "$(dirname "$0")/config/common.cfg"
+# Charge les scripts d'installation des dépendances
+source "$SCRIPTS_DIR/dependencies/install_timezone.sh"
+source "$SCRIPTS_DIR/dependencies/install_32_bit_arch.sh"
+source "$SCRIPTS_DIR/dependencies/install_sudo.sh"
+source "$SCRIPTS_DIR/dependencies/install_curl.sh"
+source "$SCRIPTS_DIR/dependencies/install_jq.sh"
+source "$SCRIPTS_DIR/dependencies/install_ip_tables.sh"
+source "$SCRIPTS_DIR/dependencies/install_spc.sh"
+source "$SCRIPTS_DIR/dependencies/install_wine_hq.sh"
 
+# Charge les fichiers de configuration
+load_config_files "$CONFIG_DIR/install.cfg"
+load_config_files "$CONFIG_DIR/server.cfg"
+load_config_files "$CONFIG_DIR/common.cfg"
+
+# Démarre l'installation
 installation_header
 check_system_update
 
-
 install_timezone
+install_32_bit_arch
 install_sudo
 install_curl
-install_ip_tables
 install_jq
+install_ip_tables
+install_spc
+install_wine_hq
 
 
 

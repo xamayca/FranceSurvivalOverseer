@@ -1,8 +1,19 @@
 #!/bin/bash
 set -euo pipefail
 
-load_config_files() {
+clean_config_file() {
+  local file_path="$1"
+  # Retire les caractères de retour chariot, les espaces et les lignes vides du fichier de configuration
+  if perl -pi -e 's/\r$//' "$file_path" && \
+      perl -pi -e 's/^\s+$//' "$file_path" && \
+      perl -ni -e 'print unless /^(\s*(#.*)?)?$/' "$file_path"; then
+      return 0
+    else
+      return 1
+    fi
+}
 
+load_config_files() {
   local config_file_path="$1"
   local config_file_name
   config_file_name=$(basename "$config_file_path")
@@ -18,11 +29,9 @@ load_config_files() {
   clear
 
   log "[WARNING] VÉRIFICATION DU CHARGEMENT DU FICHIER DE CONFIGURATION ${config_file_name^^} EN COURS ..."
-
   log "[LOG] NETTOYAGE DU FICHIER DE CONFIGURATION ${config_file_name^^} ..."
 
-
-  if perl -pi -e 's/\r$//' "$config_file_path"; then
+  if clean_config_file "$config_file_path"; then
     log "[SUCCESS] LE FICHIER DE CONFIGURATION ${config_file_name^^} A ÉTÉ NETTOYÉ AVEC SUCCÈS."
   else
     log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DU NETTOYAGE DU FICHIER DE CONFIGURATION ${config_file_name^^}."
@@ -41,5 +50,4 @@ load_config_files() {
       log "$config_file_error_msg"
       exit 1
   fi
-
 }

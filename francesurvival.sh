@@ -22,6 +22,11 @@ source "$SCRIPTS_DIR/dependencies/install_ip_tables.sh"
 source "$SCRIPTS_DIR/dependencies/install_spc.sh"
 source "$SCRIPTS_DIR/dependencies/install_wine_hq.sh"
 
+# Charge les scripts d'installation pour l'utilisateur
+source "$SCRIPTS_DIR/user/user_create.sh"
+source "$SCRIPTS_DIR/user/user_grant_sudo.sh"
+source "$SCRIPTS_DIR/user/user_sudo_no_pwd.sh"
+
 # Charge les fichiers de configuration
 load_config_files "$CONFIG_DIR/install.cfg"
 load_config_files "$CONFIG_DIR/server.cfg"

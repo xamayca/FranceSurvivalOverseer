@@ -3,13 +3,13 @@ set -euo pipefail
 
 install_wine_hq(){
 
-  log "[LOG] VÉRIFICATION DE L'INSTALLATION DE WINE HQ..."
+  log "[LOG] VÉRIFICATION & INSTALLATION DE WINE HQ EN COURS SUR $HOSTNAME..."
 
   if command -v wine &>/dev/null; then
-    log "[OK] WINE HQ EST DÉJÀ INSTALLÉ SUR VOTRE SYSTÈME."
+    log "[OK] WINE HQ EST DÉJÀ INSTALLÉ SUR $HOSTNAME."
     wine --version
   else
-    log "[WARNING] WINE HQ N'EST PAS INSTALLÉ SUR VOTRE SYSTÈME."
+    log "[WARNING] WINE HQ N'EST PAS INSTALLÉ SUR $HOSTNAME."
     log "[LOG] VÉRIFICATION DE LA VERSION DE DEBIAN..."
     if debian_version=$(grep -oP '(?<=VERSION=").*(?=")' /etc/os-release) && [ "$debian_version" == "12 (bookworm)" ]; then
       echo "Version de Debian: $debian_version"
@@ -22,13 +22,13 @@ install_wine_hq(){
     log "[LOG] VÉRIFICATION DE L'EXISTENCE DU RÉPERTOIRE POUR LES CLÉS APT..."
     # Vérifier si le répertoire pour les clés APT existe et a les bonnes permissions
     if [[ -d /etc/apt/keyrings ]]; then
-      log "[OK] RÉPERTOIRE POUR LES CLÉS APT DÉJÀ EXISTANT SUR CE SYSTÈME."
+      log "[OK] RÉPERTOIRE POUR LES CLÉS APT DÉJÀ EXISTANT SUR $HOSTNAME."
     else
-      log "[WARNING] RÉPERTOIRE POUR LES CLÉS APT N'EXISTE PAS, CRÉATION EN COURS..."
+      log "[WARNING] RÉPERTOIRE POUR LES CLÉS APT N'EXISTE PAS SUR $HOSTNAME, CRÉATION EN COURS..."
       if sudo mkdir -p -m 755 /etc/apt/keyrings; then
-        log "[SUCCESS] RÉPERTOIRE POUR LES CLÉS APT CRÉÉ AVEC SUCCÈS."
+        log "[SUCCESS] RÉPERTOIRE POUR LES CLÉS APT CRÉÉ AVEC SUCCÈS SUR $HOSTNAME."
       else
-        log "[ERROR] ERREUR LORS DE LA CRÉATION DU RÉPERTOIRE POUR LES CLÉS APT."
+        log "[ERROR] ERREUR LORS DE LA CRÉATION DU RÉPERTOIRE POUR LES CLÉS APT SUR $HOSTNAME."
         log "[DEBUG] VEUILLEZ CRÉER LE RÉPERTOIRE MANUELLEMENT AVEC LA COMMANDE: sudo mkdir -p -m 755 /etc/apt/keyrings"
         if [[ -d /etc/apt/keyrings ]]; then
           sudo rm -rf /etc/apt/keyrings
@@ -69,7 +69,7 @@ install_wine_hq(){
 
     check_system_update
 
-    log "[LOG] VÉRIFICATION DE L'INSTALLATION DE WINE HQ..."
+    log "[LOG] VÉRIFICATION & INSTALLATION DE WINE HQ EN COURS SUR LE SYSTÈME..."
     # Vérifier si Wine HQ est déjà installé sur le système
     if command -v wine &>/dev/null; then
       log "[OK] WINE HQ EST DÉJÀ INSTALLÉ SUR CE SYSTÈME."

@@ -3,7 +3,7 @@ set -euo pipefail
 
 install_sudo(){
 
-  log "[LOG] VÉRIFICATION DE L'INSTALLATION DE SUDO..."
+  log "[LOG] VÉRIFICATION & INSTALLATION DU PAQUET SUDO EN COURS SUR LE SYSTÈME..."
 
   if ! command -v sudo &>/dev/null; then
     log "[WARNING] LE PAQUET SUDO N'EST PAS INSTALLÉ, INSTALLATION EN COURS..."

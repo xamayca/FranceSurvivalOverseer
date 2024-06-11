@@ -5,6 +5,10 @@ set -euo pipefail
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts"
 CONFIG_DIR="$(dirname "$0")/config"
 
+# Charge les fichiers de configuration
+source "$CONFIG_DIR/server.sh"
+source "$CONFIG_DIR/common.sh"
+
 # Charge les scripts de d'outils et de personnalisation
 source "$SCRIPTS_DIR/tools/load_config_files.sh"
 source "$SCRIPTS_DIR/tools/format_text.sh"
@@ -32,12 +36,9 @@ source "$SCRIPTS_DIR/server/install_steam_cmd.sh"
 source "$SCRIPTS_DIR/server/install_ark_server.sh"
 source "$SCRIPTS_DIR/server/install_rcon_cli.sh"
 source "$SCRIPTS_DIR/server/install_proton_ge.sh"
-source "$SCRIPTS_DIR/server/server_command_line.sh"
+source "$SCRIPTS_DIR/server/server_cluster_create.sh"
+source "$SCRIPTS_DIR/server/server_command_line_create.sh"
 source "$SCRIPTS_DIR/server/server_service_create.sh"
-
-# Charge les fichiers de configuration
-load_config_files "$CONFIG_DIR/server.cfg"
-load_config_files "$CONFIG_DIR/common.cfg"
 
 # Démarre l'installation
 installation_header
@@ -61,7 +62,8 @@ install_ark_server
 install_rcon_cli
 install_proton_ge
 
-server_command_line
+server_cluster_create
+server_command_line_create
 server_service_create
 
 

@@ -1,3 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+
 # [ Script ]
 SHOW_HEADER_SYSTEM_INFO="True"
 INSTALL_SCRIPT_VERSION="0.2.5"
@@ -10,14 +13,13 @@ FACEBOOK_URL="https://www.facebook.com/profile.php?id=61553584645099"
 
 # [ System ]
 SYSTEM_TIMEZONE="Europe/Paris"
-USER_ACCOUNT="ark-admin"
 SERVICE_NAME="AscendedServer$MAP_NAME"
 SERVICE_ALIAS="$MAP_NAME.service"
 ARK_SERVICE_PATH="/etc/systemd/system/$SERVICE_NAME.service"
 
 # [ ARK: Survival Ascended Server Installation ]
 ARK_APP_ID="2430930"
-ARK_SERVER_FOLDER="ARK SERVER"
+ARK_SERVER_FOLDER="ARK-SERVER"
 ARK_SERVER_PATH="/home/${USER_ACCOUNT}/${ARK_SERVER_FOLDER}"
 ARK_SERVER_EXECUTABLE="ArkAscendedServer.exe"
 ARK_SERVER_EXECUTABLE_PATH="${ARK_SERVER_PATH}/ShooterGame/Binaries/Win64/${ARK_SERVER_EXECUTABLE}"
@@ -37,7 +39,7 @@ STEAM_COMPAT_DATA_PATH="${ARK_SERVER_PATH}/steamapps/compatdata/${ARK_APP_ID}"
 
 # [ RCON Cli ]
 RCON_URL="https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz"
-RCON_TGZ="$(basename ${RCON_URL})"
+RCON_TGZ="$(basename $RCON_URL)"
 RCON_CHECKSUM="8601c70dcab2f90cd842c127f700e398"
 RCON_FOLDER="RCON"
 RCON_PATH="${ARK_SERVER_PATH}/${RCON_FOLDER}"

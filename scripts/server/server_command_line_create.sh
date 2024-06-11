@@ -1,12 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-server_command_line() {
+server_command_line_create() {
 
-  log "[WARNING] GÉNÉRATION DE LA LIGNE DE COMMANDE POUR LE LANCEMENT DU SERVEUR ARK: $SERVICE_NAME"
+  log "[LOG] GÉNÉRATION DE LA LIGNE DE COMMANDE POUR LE LANCEMENT DU SERVEUR ARK: $SERVICE_NAME"
 
-  local QUERY_PARAMS=""
-  local FLAG_PARAMS=""
+  QUERY_PARAMS=""
+  FLAG_PARAMS=""
 
   # Tableau de paramètres avec ? + valeur
   local query_params=(
@@ -29,6 +29,7 @@ server_command_line() {
     "ClusterDirOverride=$CLUSTER_DIR_OVERRIDE"
     "clusterid=$CLUSTER_ID"
     "WinLiveMaxPlayers=$WIN_LIVE_MAX_PLAYERS"
+    "MULTIHOME=$MULTIHOME"
   )
 
   # Tableau de paramètres - (Yes) ou vide (No)
@@ -64,7 +65,6 @@ server_command_line() {
   done
 
   log "[SUCCESS] LIGNE DE COMMANDE GÉNÉRÉE POUR LE LANCEMENT DU SERVEUR ARK: $SERVICE_NAME"
-  log "[LOG] $PROTON_GE_EXECUTABLE_PATH run $ARK_SERVER_EXECUTABLE $QUERY_PARAMS $FLAG_PARAMS"
-  printf "%s %s" "$QUERY_PARAMS" "$FLAG_PARAMS"
+  printf "%s" "$QUERY_PARAMS$FLAG_PARAMS"
 
 }

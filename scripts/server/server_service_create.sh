@@ -5,10 +5,7 @@ server_service_create() {
 
   log "[LOG] VÉRIFICATION & CRÉATION DU SERVICE SYSTEMD POUR LE SERVEUR ARK: $SERVICE_NAME"
 
-  local QUERY_PARAMS
-  QUERY_PARAMS=$(server_command_line_query)
-  local FLAG_PARAMS
-  FLAG_PARAMS=$(server_command_line_flag)
+  COMMAND_LINE="${QUERY_PARAMS}${FLAG_PARAMS}"
 
   if ! [[ -f "$ARK_SERVICE_PATH" ]]; then
     log "[WARNING] LE SERVICE $SERVICE_NAME N'EST PAS EXISTANT SUR $HOSTNAME"
@@ -35,7 +32,7 @@ Environment="PROTON_NO_WRITE_WATCH=1"
 Environment="PROTON_LOG=1"
 Environment="STEAM_COMPAT_CLIENT_INSTALL_PATH=/home/$USER_ACCOUNT/.steam/steam/steamapps"
 Environment="STEAM_COMPAT_DATA_PATH=$STEAM_COMPAT_DATA_PATH"
-ExecStart=$PROTON_GE_EXECUTABLE_PATH run $ARK_SERVER_EXECUTABLE $QUERY_PARAMS $FLAG_PARAMS
+ExecStart=$PROTON_GE_EXECUTABLE_PATH run $ARK_SERVER_EXECUTABLE "$COMMAND_LINE"
 ExecStop=/usr/bin/pkill -f $ARK_SERVER_EXECUTABLE
 Restart=on-failure
 TimeoutStopSec=20

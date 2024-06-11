@@ -21,7 +21,6 @@ source "$SCRIPTS_DIR/dependencies/install_jq.sh"
 source "$SCRIPTS_DIR/dependencies/install_ip_tables.sh"
 source "$SCRIPTS_DIR/dependencies/install_spc.sh"
 source "$SCRIPTS_DIR/dependencies/install_wine_hq.sh"
-source "$SCRIPTS_DIR/dependencies/install_steam_cmd.sh"
 
 # Charge les scripts d'installation pour l'utilisateur
 source "$SCRIPTS_DIR/user/user_create.sh"
@@ -29,10 +28,14 @@ source "$SCRIPTS_DIR/user/user_grant_sudo.sh"
 source "$SCRIPTS_DIR/user/user_sudo_no_pwd.sh"
 
 # Charge les scripts d'installation des serveurs de jeux
+source "$SCRIPTS_DIR/server/install_steam_cmd.sh"
 source "$SCRIPTS_DIR/server/install_ark_server.sh"
+source "$SCRIPTS_DIR/server/install_rcon_cli.sh"
+source "$SCRIPTS_DIR/server/install_proton_ge.sh"
+source "$SCRIPTS_DIR/server/server_command_line.sh"
+source "$SCRIPTS_DIR/server/server_service_create.sh"
 
 # Charge les fichiers de configuration
-load_config_files "$CONFIG_DIR/install.cfg"
 load_config_files "$CONFIG_DIR/server.cfg"
 load_config_files "$CONFIG_DIR/common.cfg"
 
@@ -55,6 +58,11 @@ user_sudo_no_pwd
 
 install_steam_cmd
 install_ark_server
+install_rcon_cli
+install_proton_ge
+
+server_command_line
+server_service_create
 
 
 

@@ -23,6 +23,7 @@ install_ark_server(){
 
   else
     log "[OK] LE SERVEUR ARK: SURVIVAL ASCENDED EST DÉJÀ INSTALLÉ DANS $ARK_SERVER_PATH SUR $HOSTNAME."
+    ls -l "$ARK_SERVER_PATH"
   fi
 
 }

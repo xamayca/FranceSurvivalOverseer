@@ -73,6 +73,7 @@ install_steam_cmd(){
       log "[LOG] INSTALLATION DU PAQUET STEAMCMD EN MODE NON INTERACTIF EN COURS SUR $HOSTNAME..."
       if sudo DEBIAN_FRONTEND=noninteractive apt-get install steamcmd -y; then
         log "[SUCCESS] LE PAQUET STEAMCMD A ÉTÉ INSTALLÉ AVEC SUCCÈS SUR $HOSTNAME."
+        dpkg -s steamcmd | grep '^Version'
       else
         log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE L'INSTALLATION DU PAQUET STEAMCMD SUR $HOSTNAME."
         log "[DEBUG] VEUILLEZ ESSAYER D'INSTALLER LE PAQUET MANUELLEMENT AVEC LA COMMANDE: sudo apt-get install steamcmd -y"
@@ -90,5 +91,6 @@ install_steam_cmd(){
     fi
   else
     log "[OK] LE PAQUET STEAM CMD EST DÉJÀ INSTALLÉ DANS LE RÉPERTOIRE DE L'UTILISATEUR $USER_ACCOUNT SUR $HOSTNAME."
+    dpkg -s steamcmd | grep '^Version'
   fi
 }

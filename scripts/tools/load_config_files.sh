@@ -3,14 +3,13 @@ set -euo pipefail
 
 clean_config_file() {
   local file_path="$1"
-  # Retire les caractères de retour chariot, les espaces et les lignes vides du fichier de configuration
-  if perl -pi -e 's/\r$//' "$file_path" && \
-      perl -pi -e 's/^\s+$//' "$file_path" && \
-      perl -ni -e 'print unless /^(\s*(#.*)?)?$/' "$file_path"; then
-      return 0
-    else
-      return 1
-    fi
+  # Remove all carriage return characters, spaces and empty lines from the configuration file
+  # Retire tous les caractères de retour chariot, les espaces et les lignes vides du fichier de configuration
+  if sed -i 's/\r$//; /^$/d; s/[[:space:]]*$//' "$file_path"; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 load_config_files() {
@@ -33,6 +32,7 @@ load_config_files() {
 
   if clean_config_file "$config_file_path"; then
     log "[SUCCESS] LE FICHIER DE CONFIGURATION ${config_file_name^^} A ÉTÉ NETTOYÉ AVEC SUCCÈS."
+    sleep 1
   else
     log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DU NETTOYAGE DU FICHIER DE CONFIGURATION ${config_file_name^^}."
     log "$config_file_error_msg"

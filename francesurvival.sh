@@ -35,6 +35,7 @@ source "$SCRIPTS_DIR/server/install_steam_cmd.sh"
 source "$SCRIPTS_DIR/server/install_ark_server.sh"
 source "$SCRIPTS_DIR/server/install_rcon_cli.sh"
 source "$SCRIPTS_DIR/server/install_proton_ge.sh"
+source "$SCRIPTS_DIR/server/server_management_create.sh"
 source "$SCRIPTS_DIR/server/server_cluster_create.sh"
 source "$SCRIPTS_DIR/server/server_command_line_create.sh"
 source "$SCRIPTS_DIR/server/server_service_create.sh"
@@ -61,6 +62,7 @@ install_ark_server
 install_rcon_cli
 install_proton_ge
 
+server_management_create
 server_cluster_create
 server_command_line_create
 server_service_create

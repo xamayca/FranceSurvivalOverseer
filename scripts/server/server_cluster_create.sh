@@ -3,6 +3,11 @@ set -euo pipefail
 
 server_cluster_create() {
 
+  if mount | grep -q "$NFS_IP_ADDRESS:$NFS_FOLDER_PATH on $CLUSTER_DIR_OVERRIDE type nfs"; then
+    log "[OK] LE CLUSTER NFS EST MONTÉ ET CONFIGURÉ CORRECTEMENT SUR $HOSTNAME."
+    exit 0
+  fi
+
   check_variables(){
     if [ -z "$MULTIHOME" ]; then
       log "[ERROR] VEUILLEZ DÉFINIR L'ADRESSE IP LOCALE DU SERVEUR DANS LA VARIABLE MULTIHOME DU FICHIER DE CONFIGURATION."

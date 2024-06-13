@@ -135,3 +135,10 @@ FORCE_ALLOW_CAVE_FLYERS=""
 NO_DINOS=""
 EASTER_COLORS=""
 
+# [ ARK: Survival Ascended TEST Environment Configuration ]
+NO_SOUND=""
+ONE_THREAD=""
+NO_PERF_THREADS=""
+FORCE_USE_PERF_THREADS=""
+NO_AI=""
+

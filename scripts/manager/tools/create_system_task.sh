@@ -94,7 +94,9 @@ create_system_task(){
                         esac
                       done
                         log "[LOG] CRÉATION DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVICE_NAME..."
-                        new_cron_task="$task_minute $task_hour $task_day_of_month $task_month $task_day /home/$USER_ACCOUNT/maintenance/management.sh $task_function # $task_name - $task_description"
+
+                        new_cron_task="$task_minute $task_hour $task_day_of_month $task_month $task_day $MANAGEMENT_SCRIPT_PATH $task_function # $task_name - $task_description"
+
                         if (sudo -u "$USER_ACCOUNT" crontab -l;echo "TERM=xterm-256color";echo "SHELL=/bin/bash";echo "PATH=/sbin:/bin:/usr/sbin:/usr/bin";echo "$new_cron_task") | sudo -u "$USER_ACCOUNT" crontab -; then
                           log "[SUCCESS] TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVICE_NAME CRÉÉE AVEC SUCCÈS."
                           log "[INFO] VOICI LA TÂCHE PLANIFIÉE CRÉÉE: $new_cron_task"

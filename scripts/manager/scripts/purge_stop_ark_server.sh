@@ -8,7 +8,7 @@ purge_stop_ark_server(){
 
   # Vérification de la valeur de PreventOfflinePvP dans le fichier de configuration du service
   if grep -q "PreventOfflinePvP=True" /etc/systemd/system/AscendedServer"$MAP_NAME".service; then
-    log "[OK] LA PURGE EST DÉJÀ DÉSACTIVÉE SUR LE SERVEUR ARK."
+    log "[OK] LA PURGE EST DÉJÀ DÉSACTIVÉE SUR LE SERVEUR ARK $SERVICE_NAME."
     return 0
   else
     service_edit_command_line "PreventOfflinePvP" "True"
@@ -24,11 +24,11 @@ purge_stop_ark_server(){
   service_daemon_reload
 
   local messages=(
-    "LE SERVEUR ARK VA REDEMARRER DANS 10 MINUTES POUR DESACTIVATION DE LA PURGE..."
-    "LE SERVEUR ARK VA REDEMARRER DANS 5 MINUTES POUR DESACTIVATION DE LA PURGE..."
-    "LE SERVEUR ARK VA REDEMARRER DANS 1 MINUTE POUR DESACTIVATION DE LA PURGE..."
-    "LE SERVEUR ARK VA REDEMARRER DANS QUELQUES SECONDES POUR DESACTIVATION DE LA PURGE..."
-    "VOUS ALLEZ ETRE DECONNECTE(E) DANS QUELQUES INSTANTS, SAUVEGARDE DU MONDE EN COURS..."
+    "$RCON_PURGE_STOP_MSG_1"
+    "$RCON_PURGE_STOP_MSG_2"
+    "$RCON_PURGE_STOP_MSG_3"
+    "$RCON_PURGE_STOP_MSG_4"
+    "$RCON_PURGE_STOP_MSG_5"
   )
   local delays=(300 240 60 10 5)
   send_rcon_messages messages[@] delays[@]

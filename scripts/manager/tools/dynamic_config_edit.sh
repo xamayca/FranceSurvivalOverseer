@@ -55,6 +55,7 @@ dynamic_config(){
   local dynamic_message_2="$3"
   local dynamic_message_3="$4"
   local dynamic_message_4="$5"
+  local dynamic_message_5="$6"
   local destroy_wild_dinos="$6"
 
   dynamic_config_edit "$day"
@@ -72,8 +73,11 @@ dynamic_config(){
   if [ -n "$dynamic_message_4" ]; then
     messages+=("$dynamic_message_4")
   fi
+  if [ -n "$dynamic_message_5" ]; then
+    messages+=("$dynamic_message_5")
+  fi
 
-  local delays=(5 2 2 2)
+  local delays=(5 5 5 5 5)
   rcon_send_messages messages[@] delays[@]
 
   local commands=("ForceUpdateDynamicConfig")

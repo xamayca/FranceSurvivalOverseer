@@ -3,6 +3,7 @@ set -euo pipefail
 
 # [ System ]
 USER_ACCOUNT="ark-admin"
+ARK_SERVER_FOLDER="ARKSERVER"
 
 # [ ARK: Survival Ascended Server Configuration ]
 MAP_NAME="TheIsland_WP"
@@ -61,8 +62,8 @@ NO_TRANSFER_FROM_FILTERING="Yes"
 
 # [ ARK: Survival Ascended Dynamic Configuration ]
 USE_DYNAMIC_CONFIG="Yes"
-DYNAMIC_CONFIG_DIR="${ARK_SERVER_PATH}/dynamic-config"
-CUSTOM_DYNAMIC_CONFIG_URL="http://127.0.0.1/home/$USER_ACCOUNT/ark-survival-ascended/dynamic-config/Current/dyn-conf.ini"
+DYNAMIC_CONFIG_DIR="/home/${USER_ACCOUNT}/${ARK_SERVER_FOLDER}/dynamic-config"
+CUSTOM_DYNAMIC_CONFIG_URL="http://127.0.0.1/home/$DYNAMIC_CONFIG_DIR/Current/dyn-conf.ini"
 
 # [ ARK: Survival Ascended Rates Configuration ]
 TAMING_SPEED_MULTIPLIER="3"

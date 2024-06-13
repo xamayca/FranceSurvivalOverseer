@@ -3,8 +3,8 @@ set -euo pipefail
 
 # Définir le chemin du répertoire des scripts & tools
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SCRIPTS_DIR="$(dirname "$0")/scripts"
-CONFIG_DIR="$(dirname "$0")/config"
+SCRIPTS_DIR="$CURRENT_DIR/scripts"
+CONFIG_DIR="$CURRENT_DIR/config"
 
 # Charge les fichiers de configuration
 source "$CONFIG_DIR/server.sh"
@@ -32,6 +32,7 @@ source "$SCRIPTS_DIR/purge_start_ark_server.sh"
 source "$SCRIPTS_DIR/purge_stop_ark_server.sh"
 source "$SCRIPTS_DIR/restart_ark_server.sh"
 source "$SCRIPTS_DIR/stop_ark_server.sh"
+
 
 # SWITCH CASE POUR L'EXÉCUTION DES COMMANDES AVEC ARGUMENTS [NE PAS MODIFIER]
 case "$1" in

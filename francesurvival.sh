@@ -10,7 +10,6 @@ source "$CONFIG_DIR/server.sh"
 source "$CONFIG_DIR/common.sh"
 
 # Charge les scripts de d'outils et de personnalisation
-source "$SCRIPTS_DIR/tools/load_config_files.sh"
 source "$SCRIPTS_DIR/tools/format_text.sh"
 source "$SCRIPTS_DIR/custom/custom_shell_logs.sh"
 source "$SCRIPTS_DIR/custom/installation_header.sh"

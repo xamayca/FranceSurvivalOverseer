@@ -3,8 +3,8 @@ set -euo pipefail
 
 # [ Script ]
 SHOW_HEADER_SYSTEM_INFO="True"
-INSTALL_SCRIPT_VERSION="0.2.5"
-MANAGEMENT_SCRIPT_VERSION="0.1.0"
+INSTALL_SCRIPT_VERSION="0.2.7"
+MANAGEMENT_SCRIPT_VERSION="0.1.3"
 WEBSITE_URL="https://www.france-survival.fr/"
 GITHUB_URL="https://github.com/xamayca/ASCENDED-SERVER-DEBIAN12-PROTONGE"
 DISCORD_URL="https://discord.gg/F7pQyrRDd8"

@@ -6,7 +6,7 @@ install_wine_hq(){
   log "[LOG] VÉRIFICATION & INSTALLATION DE WINE HQ EN COURS SUR $HOSTNAME..."
 
   if command -v wine &>/dev/null; then
-    log "[OK] WINE HQ EST DÉJÀ INSTALLÉ SUR $HOSTNAME."
+    log "[OK] WINE HQ EST DÉJÀ CORRECTEMENT INSTALLÉ SUR $HOSTNAME."
     wine --version
   else
     log "[WARNING] WINE HQ N'EST PAS INSTALLÉ SUR $HOSTNAME."
@@ -72,7 +72,7 @@ install_wine_hq(){
     log "[LOG] VÉRIFICATION & INSTALLATION DE WINE HQ EN COURS SUR $HOSTNAME EN COURS..."
     # Vérifier si Wine HQ est déjà installé sur le système
     if command -v wine &>/dev/null; then
-      log "[OK] WINE HQ EST DÉJÀ INSTALLÉ SUR CE SYSTÈME."
+      log "[OK] WINE HQ EST DÉJÀ CORRECTEMENT INSTALLÉ SUR $HOSTNAME."
       sudo wine --version
     else
       log "[WARNING] WINE HQ N'EST PAS INSTALLÉ SUR CE SYSTÈME, INSTALLATION EN COURS..."

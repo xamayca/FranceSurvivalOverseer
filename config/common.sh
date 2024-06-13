@@ -16,7 +16,7 @@ SYSTEM_TIMEZONE="Europe/Paris"
 SERVICE_NAME="AscendedServer$MAP_NAME"
 SERVICE_ALIAS="$MAP_NAME.service"
 ARK_SERVICE_PATH="/etc/systemd/system/$SERVICE_NAME.service"
-MANAGEMENT_SCRIPT_PATH="/home/${USER_ACCOUNT}/manager/manager.sh"
+MANAGEMENT_SCRIPT_PATH="/home/${USER_ACCOUNT}/manager/maintenance.sh"
 
 # [ ARK: Survival Ascended Server Installation ]
 ARK_APP_ID="2430930"

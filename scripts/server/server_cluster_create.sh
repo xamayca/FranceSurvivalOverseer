@@ -3,6 +3,7 @@ set -euo pipefail
 
 server_cluster_create() {
 
+  log "[LOG] VÉRIFICATION DU MONTAGE DU CLUSTER NFS SUR $HOSTNAME POUR LE SERVEUR ARK: $SERVICE_NAME..."
   if mount | grep -q "$NFS_IP_ADDRESS:$NFS_FOLDER_PATH on $CLUSTER_DIR_OVERRIDE type nfs"; then
     log "[OK] LE CLUSTER NFS EST MONTÉ ET CONFIGURÉ CORRECTEMENT SUR $HOSTNAME."
     exit 0

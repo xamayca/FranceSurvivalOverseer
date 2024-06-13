@@ -46,7 +46,7 @@ install_ip_tables(){
     }
 
   if [ -n "$GAME_PORT" ]; then
-    check_and_configure_rule "$GAME_PORT" "tcp" "ARK: Survival Ascended Game Port"
+    check_and_configure_rule "$GAME_PORT" "udp" "ARK: Survival Ascended Game Port"
   fi
 
   if [ -n "$RCON_PORT" ]; then

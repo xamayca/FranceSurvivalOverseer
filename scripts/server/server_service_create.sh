@@ -14,7 +14,7 @@ server_service_create() {
     if sudo tee "$ARK_SERVICE_PATH" > /dev/null <<EOF
 [Unit]
 Description="$SERVICE_NAME"
-After=network.target
+After=syslog.target network.target network-online.target nss-lookup.target
 
 [Service]
 Type=simple
@@ -32,7 +32,7 @@ Environment="PROTON_NO_WRITE_WATCH=1"
 Environment="PROTON_LOG=1"
 Environment="STEAM_COMPAT_CLIENT_INSTALL_PATH=/home/$USER_ACCOUNT/.steam/steam/steamapps"
 Environment="STEAM_COMPAT_DATA_PATH=$STEAM_COMPAT_DATA_PATH"
-ExecStart=$PROTON_GE_EXECUTABLE_PATH run $ARK_SERVER_EXECUTABLE "$COMMAND_LINE"
+ExecStart=$PROTON_GE_EXECUTABLE_PATH run $ARK_SERVER_EXECUTABLE $COMMAND_LINE
 ExecStop=/usr/bin/pkill -f $ARK_SERVER_EXECUTABLE
 Restart=on-failure
 TimeoutStopSec=20

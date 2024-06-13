@@ -49,7 +49,7 @@ install_32_bit_arch
 install_sudo
 install_curl
 install_jq
-install_ip_tables
+#install_ip_tables
 install_spc
 install_wine_hq
 

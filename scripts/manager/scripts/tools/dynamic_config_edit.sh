@@ -7,10 +7,10 @@ dynamic_config_edit(){
     "ForceUpdateDynamicConfig"
   )
 
-  log "[WARNING] CONFIGURATION DYNAMIQUE DU SERVEUR ARK: $SERVICE_NAME POUR LE JOUR: $day..."
+  log "[WARNING] CONFIGURATION DYNAMIQUE DU SERVEUR ARK: $SERVER_SERVICE_NAME POUR LE JOUR: $day..."
 
   log "[LOG] SUPPRESSION DU FICHIER DE CONFIGURATION DYNAMIQUE ACTUEL..."
-  if sudo rm -f "$DYNAMIC_CONFIG_DIR/Current/dyn-conf.ini"; then
+  if sudo rm -f "$DYNAMIC_CONFIG_DIR/current/dyn.ini"; then
     log "[SUCCESS] SUPPRESSION DU FICHIER DE CONFIGURATION DYNAMIQUE ACTUEL RÉUSSIE."
   else
     log "[ERROR] ERREUR LORS DE LA SUPPRESSION DU FICHIER DE CONFIGURATION DYNAMIQUE ACTUEL."
@@ -19,7 +19,7 @@ dynamic_config_edit(){
   fi
 
   log "[LOG] COPIE DU FICHIER DE CONFIGURATION DYNAMIQUE POUR RESET LES PRÉCÉDENTES MODIFICATIONS..."
-  if sudo cp "$DYNAMIC_CONFIG_DIR/Reset/dyn-conf.ini" "$DYNAMIC_CONFIG_DIR/Current/dyn-conf.ini"; then
+  if sudo cp "$DYNAMIC_CONFIG_DIR/reset/dyn.ini" "$DYNAMIC_CONFIG_DIR/current/dyn.ini"; then
     log "[SUCCESS] COPIE DU FICHIER DE CONFIGURATION DYNAMIQUE RÉUSSIE POUR RESET LES PRÉCÉDENTES MODIFICATIONS."
   else
     log "[ERROR] ERREUR LORS DE LA COPIE DU FICHIER DE CONFIGURATION DYNAMIQUE."
@@ -32,12 +32,12 @@ dynamic_config_edit(){
     log "[SUCCESS] EXÉCUTION DE LA COMMANDE RCON: ForceUpdateDynamicConfig RÉUSSIE."
   else
     log "[ERROR] ERREUR LORS DE L'EXÉCUTION DE LA COMMANDE RCON: ForceUpdateDynamicConfig."
-    log "[DEBUG] VÉRIFIEZ QUE LE SERVEUR ARK: $SERVICE_NAME EST BIEN DÉMARRÉ."
+    log "[DEBUG] VÉRIFIEZ QUE LE SERVEUR ARK: $SERVER_SERVICE_NAME EST BIEN DÉMARRÉ."
     return
   fi
 
   log "[LOG] COPIE DU FICHIER DE CONFIGURATION DYNAMIQUE POUR LE JOUR: $day..."
-  if sudo cp "$DYNAMIC_CONFIG_DIR/$day/dyn-conf.ini" "$DYNAMIC_CONFIG_DIR/Current/dyn-conf.ini"; then
+  if sudo cp "$DYNAMIC_CONFIG_DIR/$day/dyn.ini" "$DYNAMIC_CONFIG_DIR/current/dyn.ini"; then
     log "[SUCCESS] COPIE DU FICHIER DE CONFIGURATION DYNAMIQUE POUR LE JOUR: $day RÉUSSIE."
   else
     log "[ERROR] ERREUR LORS DE LA COPIE DU FICHIER DE CONFIGURATION DYNAMIQUE POUR LE JOUR: $day."
@@ -45,7 +45,7 @@ dynamic_config_edit(){
     return
   fi
 
-log "[SUCCESS] CONFIGURATION DYNAMIQUE DU SERVEUR ARK: $SERVICE_NAME POUR LE JOUR: $day RÉUSSIE."
+log "[SUCCESS] CONFIGURATION DYNAMIQUE DU SERVEUR ARK: $SERVER_SERVICE_NAME POUR LE JOUR: $day RÉUSSIE."
 
 }
 
@@ -56,7 +56,7 @@ dynamic_config(){
   local dynamic_message_3="$4"
   local dynamic_message_4="$5"
   local dynamic_message_5="$6"
-  local destroy_wild_dinos="$6"
+  local destroy_wild_dinos="$7"
 
   dynamic_config_edit "$day"
 
@@ -78,7 +78,7 @@ dynamic_config(){
   fi
 
   local delays=(5 5 5 5 5)
-  rcon_send_messages messages[@] delays[@]
+  send_rcon_messages messages[@] delays[@]
 
   local commands=("ForceUpdateDynamicConfig")
   if [ "$destroy_wild_dinos" = "Yes" ]; then

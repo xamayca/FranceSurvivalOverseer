@@ -2,7 +2,7 @@
 set -euo pipefail
 
 create_system_task(){
-  log "[WARNING] VOULEZ VOUS CRÉER UNE TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVICE_NAME?"
+  log "[WARNING] VOULEZ VOUS CRÉER UNE TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME?"
   # si le choix est oui alors on demande autre chose
   if read -r -p "Entrez votre choix [O/o/N/n/Oui/Non]: " choice; then
     case $choice in
@@ -42,19 +42,19 @@ create_system_task(){
                       select opt in "${options[@]}"; do
                         case $opt in
                           "auto_update")
-                            task_function="auto_update_ark_server"
+                            task_function="auto_update"
                             break
                             ;;
                           "daily_restart")
-                            task_function="daily_restart_ark_server"
+                            task_function="daily_restart"
                             break
                             ;;
                           "purge_start")
-                            task_function="purge_start_ark_server"
+                            task_function="purge_start"
                             break
                             ;;
                           "purge_stop")
-                            task_function="purge_stop_ark_server"
+                            task_function="purge_stop"
                             break
                             ;;
                           "dynamic_monday")
@@ -93,15 +93,52 @@ create_system_task(){
                             ;;
                         esac
                       done
-                        log "[LOG] CRÉATION DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVICE_NAME..."
+                        log "[LOG] CRÉATION DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME..."
 
-                        new_cron_task="$task_minute $task_hour $task_day_of_month $task_month $task_day $MANAGEMENT_SCRIPT_PATH $task_function # $task_name - $task_description"
+                        log "[LOG] VÉRIFICATION DE LA VARIABLE TERM DANS LA CRONTAB DE $USER_ACCOUNT..."
+                        if ! sudo -u "$USER_ACCOUNT" crontab -l | grep -q "TERM=xterm-256color"; then
+                          log "[WARNING] LA VARIABLE TERM N'EST PAS DÉFINIE DANS LA CRONTAB DE $USER_ACCOUNT."
+                          log "[LOG] AJOUT DE LA VARIABLE TERM DANS LA CRONTAB DE $USER_ACCOUNT..."
+                          if sudo -u "$USER_ACCOUNT" crontab -l | { cat; echo "TERM=xterm-256color"; } | sudo -u "$USER_ACCOUNT" crontab -; then
+                            log "[SUCCESS] VARIABLE TERM AJOUTÉE AVEC SUCCÈS DANS LA CRONTAB DE $USER_ACCOUNT."
+                          else
+                            log "[ERROR] ERREUR LORS DE L'AJOUT DE LA VARIABLE TERM DANS LA CRONTAB DE $USER_ACCOUNT."
+                            log "[DEBUG] VÉRIFIEZ SI LA VARIABLE TERM EST DÉFINIE DANS LA CRONTAB DE $USER_ACCOUNT."
+                          fi
+                        fi
 
-                        if (sudo -u "$USER_ACCOUNT" crontab -l;echo "TERM=xterm-256color";echo "SHELL=/bin/bash";echo "PATH=/sbin:/bin:/usr/sbin:/usr/bin";echo "$new_cron_task") | sudo -u "$USER_ACCOUNT" crontab -; then
-                          log "[SUCCESS] TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVICE_NAME CRÉÉE AVEC SUCCÈS."
+                        log "[LOG] VÉRIFICATION DE LA VARIABLE SHELL DANS LA CRONTAB DE $USER_ACCOUNT..."
+                        if ! sudo -u "$USER_ACCOUNT" crontab -l | grep -q "SHELL=/bin/bash"; then
+                          log "[WARNING] LA VARIABLE SHELL N'EST PAS DÉFINIE DANS LA CRONTAB DE $USER_ACCOUNT."
+                          log "[LOG] AJOUT DE LA VARIABLE SHELL DANS LA CRONTAB DE $USER_ACCOUNT..."
+                          if sudo -u "$USER_ACCOUNT" crontab -l | { cat; echo "SHELL=/bin/bash"; } | sudo -u "$USER_ACCOUNT" crontab -; then
+                            log "[SUCCESS] VARIABLE SHELL AJOUTÉE AVEC SUCCÈS DANS LA CRONTAB DE $USER_ACCOUNT."
+                          else
+                            log "[ERROR] ERREUR LORS DE L'AJOUT DE LA VARIABLE SHELL DANS LA CRONTAB DE $USER_ACCOUNT."
+                            log "[DEBUG] VÉRIFIEZ SI LA VARIABLE SHELL EST DÉFINIE DANS LA CRONTAB DE $USER_ACCOUNT."
+                          fi
+
+                        fi
+
+                        log "[LOG] VÉRIFICATION DE LA VARIABLE PATH DANS LA CRONTAB DE $USER_ACCOUNT..."
+                        if ! sudo -u "$USER_ACCOUNT" crontab -l | grep -q "PATH=/sbin:/bin:/usr/sbin:/usr/bin"; then
+                          log "[WARNING] LA VARIABLE PATH N'EST PAS DÉFINIE DANS LA CRONTAB DE $USER_ACCOUNT."
+                          log "[LOG] AJOUT DE LA VARIABLE PATH DANS LA CRONTAB DE $USER_ACCOUNT..."
+                          if sudo -u "$USER_ACCOUNT" crontab -l | { cat; echo "PATH=/sbin:/bin:/usr/sbin:/usr/bin"; } | sudo -u "$USER_ACCOUNT" crontab -; then
+                            log "[SUCCESS] VARIABLE PATH AJOUTÉE AVEC SUCCÈS DANS LA CRONTAB DE $USER_ACCOUNT."
+                          else
+                            log "[ERROR] ERREUR LORS DE L'AJOUT DE LA VARIABLE PATH DANS LA CRONTAB DE $USER_ACCOUNT."
+                            log "[DEBUG] VÉRIFIEZ SI LA VARIABLE PATH EST DÉFINIE DANS LA CRONTAB DE $USER_ACCOUNT."
+                          fi
+                        fi
+
+                        new_cron_task="$task_minute $task_hour $task_day_of_month $task_month $task_day $MANAGEMENT_SCRIPT_PATH $task_function >> $CRONTAB_LOG_PATH 2>&1 # $task_name - $task_description"
+
+                        if (sudo -u "$USER_ACCOUNT" crontab -l;echo "$new_cron_task") | sudo -u "$USER_ACCOUNT" crontab -; then
+                          log "[SUCCESS] TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME CRÉÉE AVEC SUCCÈS."
                           log "[INFO] VOICI LA TÂCHE PLANIFIÉE CRÉÉE: $new_cron_task"
                         else
-                          log "[ERROR] ERREUR LORS DE LA CRÉATION DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVICE_NAME."
+                          log "[ERROR] ERREUR LORS DE LA CRÉATION DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
                         fi
                     else
                       log "[ERROR] ERREUR LORS DE LA SAISIE DU MOIS DE LA TÂCHE PLANIFIÉE."
@@ -126,7 +163,7 @@ create_system_task(){
         fi
         ;;
       [nN][oO]|[nN])
-        log "[INFO] LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVICE_NAME N'A PAS ÉTÉ CRÉÉE."
+        log "[INFO] LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME N'A PAS ÉTÉ CRÉÉE."
         ;;
       *)
         log "[ERROR] CHOIX INVALIDE: $choice. VEUILLEZ SAISIR O OU N."
@@ -136,3 +173,5 @@ create_system_task(){
     log "[ERROR] ERREUR LORS DE LA SAISIE DU CHOIX DE CRÉATION DE LA TÂCHE PLANIFIÉE."
   fi
 }
+
+

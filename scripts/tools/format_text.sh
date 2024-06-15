@@ -4,6 +4,8 @@ set -euo pipefail
 text_center() {
     [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 1
 
+    COLUMNS=$(tput cols)
+
     declare input="${1}" filler out no_ansi_out
     no_ansi_out="$(echo -e "${input}" | sed 's/\x1b\[[0-9;]*m//g')"
     declare -i str_len=${#no_ansi_out}

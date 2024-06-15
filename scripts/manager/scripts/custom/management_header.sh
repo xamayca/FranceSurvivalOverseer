@@ -35,7 +35,9 @@ management_header() {
     text_center "${BGREY}Système d'exploitation: $(grep PRETTY_NAME /etc/os-release | cut -d= -f2- | tr -d '\"')"
     text_center "Version du noyau: $(uname -r)"
     text_center "Architecture du système: $(uname -m)"
-    text_center "Utilisateur actuel: $USER"
+    if [ -n "${USER:-}" ]; then
+        text_center "Utilisateur actuel: $USER"
+    fi
     text_center "Hôte actuel: $HOSTNAME"
     text_center "PID du script: $$"
     text_center "PID du processus parent: $PPID"

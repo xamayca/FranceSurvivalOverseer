@@ -13,10 +13,15 @@ FACEBOOK_URL="https://www.facebook.com/profile.php?id=61553584645099"
 
 # [ System ]
 SYSTEM_TIMEZONE="Europe/Paris"
-SERVICE_NAME="AscendedServer$MAP_NAME"
-SERVICE_ALIAS="$MAP_NAME.service"
-ARK_SERVICE_PATH="/etc/systemd/system/$SERVICE_NAME.service"
+SERVER_SERVICE_NAME="AscendedServer$MAP_NAME"
+SERVER_SERVICE_ALIAS="$MAP_NAME.service"
+ARK_SERVICE_PATH="/etc/systemd/system/$SERVER_SERVICE_NAME.service"
+WEB_SERVICE_NAME="$MAP_NAME-web"
+WEB_SERVICE_ALIAS="$MAP_NAME-web.service"
+WEB_SERVICE_PATH="/etc/systemd/system/$SERVER_SERVICE_NAME-web.service"
 MANAGEMENT_SCRIPT_PATH="/home/${USER_ACCOUNT}/manager/maintenance.sh"
+DYNAMIC_CONFIG_DIR="/home/${USER_ACCOUNT}/manager/web/dynamic-config"
+CRONTAB_LOG_PATH="/home/${USER_ACCOUNT}/cron-$SERVER_SERVICE_NAME.log"
 
 # [ ARK: Survival Ascended Server Installation ]
 ARK_APP_ID="2430930"

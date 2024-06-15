@@ -3,11 +3,11 @@ set -euo pipefail
 
 purge_start_ark_server(){
 
-  log "[WARNING] ACTIVATION DE LA PURGE PVP SUR LE SERVEUR ARK $SERVICE_NAME..."
+  log "[WARNING] ACTIVATION DE LA PURGE PVP SUR LE SERVEUR ARK $SERVER_SERVICE_NAME..."
   log "[LOG] VÉRIFICATION DE LA VALEUR DE PreventOfflinePvP DANS LE FICHIER DE CONFIGURATION DU SERVICE..."
   # Vérification de la valeur de PreventOfflinePvP dans le fichier de configuration du service
   if grep "PreventOfflinePvP=False" /etc/systemd/system/AscendedServer"$MAP_NAME".service; then
-    log "[OK] LA PURGE EST DÉJÀ ACTIVÉE SUR LE SERVEUR ARK $SERVICE_NAME."
+    log "[OK] LA PURGE EST DÉJÀ ACTIVÉE SUR LE SERVEUR ARK $SERVER_SERVICE_NAME."
     return 0
   else
     service_edit_command_line "PreventOfflinePvP" "False"
@@ -15,7 +15,7 @@ purge_start_ark_server(){
 
   # Vérification de la valeur de Restart dans le fichier de configuration du service
   if grep "Restart=on-failure" /etc/systemd/system/AscendedServer"$MAP_NAME".service; then
-    log "[LOG] LE REDÉMARRAGE DU SERVICE $SERVICE_NAME EST DÉJÀ CONFIGURÉ SUR: on-failure."
+    log "[LOG] LE REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME EST DÉJÀ CONFIGURÉ SUR: on-failure."
   else
     service_edit_restart "on-failure"
   fi
@@ -38,13 +38,13 @@ purge_start_ark_server(){
   )
   rcon_execute_commands commands[@]
 
-  log "[LOG] REDÉMARRAGE DU SERVICE $SERVICE_NAME POUR ACTIVATION DE LA PURGE..."
-  if sudo systemctl restart "$SERVICE_NAME"; then
-    log "[SUCCESS] REDÉMARRAGE DU SERVICE $SERVICE_NAME RÉUSSI."
+  log "[LOG] REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME POUR ACTIVATION DE LA PURGE..."
+  if sudo systemctl restart "$SERVER_SERVICE_NAME"; then
+    log "[SUCCESS] REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME RÉUSSI."
   else
-    log "[ERROR] ERREUR LORS DU REDÉMARRAGE DU SERVICE $SERVICE_NAME."
+    log "[ERROR] ERREUR LORS DU REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME."
     log "[DEBUG] VEUILLEZ ESSAYER DE REDÉMARRER LE SERVICE MANUELLEMENT AVEC LA COMMANDE SUIVANTE:"
-    log "[DEBUG] sudo systemctl restart $SERVICE_NAME"
+    log "[DEBUG] sudo systemctl restart $SERVER_SERVICE_NAME"
   fi
 
 }

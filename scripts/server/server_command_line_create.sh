@@ -3,7 +3,7 @@ set -euo pipefail
 
 server_command_line_create() {
 
-  log "[LOG] GÉNÉRATION DE LA LIGNE DE COMMANDE POUR LE LANCEMENT DU SERVEUR ARK: $SERVICE_NAME"
+  log "[LOG] GÉNÉRATION DE LA LIGNE DE COMMANDE POUR LE LANCEMENT DU SERVEUR ARK: $SERVER_SERVICE_NAME"
 
   QUERY_PARAMS=""
   FLAG_PARAMS=""
@@ -88,7 +88,6 @@ server_command_line_create() {
     "DinoDamageMultiplier=$DINO_DAMAGE_MULTIPLIER"
     "DinoResistanceMultiplier=$DINO_RESISTANCE_MULTIPLIER"
     "MaxTamedDinos=$MAX_TAMED_DINOS"
-    "CustomDynamicConfigUrl=$CUSTOM_DYNAMIC_CONFIG_URL"
     "ServerAdminPassword=$SERVER_ADMIN_PASSWORD"
   )
 
@@ -97,6 +96,8 @@ server_command_line_create() {
     "ClusterDirOverride=$CLUSTER_DIR_OVERRIDE"
     "clusterid=$CLUSTER_ID"
     "WinLiveMaxPlayers=$WIN_LIVE_MAX_PLAYERS"
+    "passivemods=$PASSIVE_MODS"
+    "mods=$MODS"
   )
 
   # Tableau de paramètres - (Yes) ou vide (No)
@@ -148,7 +149,7 @@ server_command_line_create() {
     fi
   done
 
-  log "[SUCCESS] LIGNE DE COMMANDE GÉNÉRÉE POUR LE LANCEMENT DU SERVEUR ARK: $SERVICE_NAME"
+  log "[SUCCESS] LIGNE DE COMMANDE GÉNÉRÉE POUR LE LANCEMENT DU SERVEUR ARK: $SERVER_SERVICE_NAME"
   printf "%s" "$QUERY_PARAMS$FLAG_PARAMS"
 
 }

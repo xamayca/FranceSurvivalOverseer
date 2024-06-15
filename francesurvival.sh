@@ -2,8 +2,9 @@
 set -euo pipefail
 
 # Définir le chemin du répertoire des scripts & tools
-SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts"
-CONFIG_DIR="$(dirname "$0")/config"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPTS_DIR="$CURRENT_DIR/scripts"
+CONFIG_DIR="$CURRENT_DIR/config"
 
 # Charge les fichiers de configuration
 source "$CONFIG_DIR/server.sh"
@@ -38,6 +39,7 @@ source "$SCRIPTS_DIR/server/install_proton_ge.sh"
 source "$SCRIPTS_DIR/server/server_management_create.sh"
 source "$SCRIPTS_DIR/server/server_cluster_create.sh"
 source "$SCRIPTS_DIR/server/server_command_line_create.sh"
+source "$SCRIPTS_DIR/server/server_web_service_create.sh"
 source "$SCRIPTS_DIR/server/server_service_create.sh"
 
 # Démarre l'installation
@@ -66,6 +68,8 @@ server_management_create
 server_cluster_create
 server_command_line_create
 server_service_create
+
+
 
 
 

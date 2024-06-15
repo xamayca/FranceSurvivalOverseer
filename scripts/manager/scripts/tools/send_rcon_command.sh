@@ -15,10 +15,11 @@ send_rcon_messages() {
     local delay="${delays[0]}"
     log "[OK] ENVOI DU MESSAGE RCON: $message"
     send_rcon_command "ServerChat $message"
-    for delay in $(seq "$delay" -1 1); do
-      log "[INFO] TEMPS RESTANT AVANT L'ENVOI DU PROCHAIN MESSAGE RCON: $delay SECONDES"
-      sleep 1
-    done
+    sleep "$delay"
+    #for delay in $(seq "$delay" -1 1); do
+    #  log "[INFO] TEMPS RESTANT AVANT L'ENVOI DU PROCHAIN MESSAGE RCON: $delay SECONDES"
+    #  sleep 1
+    #done
     messages=("${messages[@]:1}")
     delays=("${delays[@]:1}")
   done

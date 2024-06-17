@@ -11,7 +11,7 @@ source "$SCRIPTS_DIR/config/common.sh"
 
 # chargé les fichiers de script dans le répertoire des scripts et ses sous-répertoires, sauf ceux dans le répertoire 'web' et 'config' et le fichier 'overseer.sh'
 while IFS= read -r -d '' file; do
-  # echo "Fichier: $file"ddzqdz
+  # echo "Fichier: $file"
   # shellcheck source=$file
   source "$file"
 done < <(find "$SCRIPTS_DIR" -type f -name "*.sh" ! -path "*/config/*" ! -path "*/web/*" ! -name "overseer.sh" -print0)

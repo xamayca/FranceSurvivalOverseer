@@ -63,6 +63,8 @@ NO_TRANSFER_FROM_FILTERING="Yes"
 # [ ARK: Survival Ascended Dynamic Configuration ]
 USE_DYNAMIC_CONFIG="Yes"
 DYNAMIC_CONFIG_URL="http://127.0.0.1:8080/dynamic-config/current/dyn.ini"
+#CUSTOM_LIVE_TUNING_URL="http://127.0.0.1:8080/live-tuning/discord_webhook.sh"
+#DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1252291969883963433/4F8MyYN2sGisgyLxfL286SYtlDOAox1fGYoB_ox9UIiPxca4q27j5QkDU5Noed53jEWP"
 
 # [ ARK: Survival Ascended Rates Configuration ]
 TAMING_SPEED_MULTIPLIER="3"

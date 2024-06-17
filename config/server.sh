@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # [ System ]
-USER_ACCOUNT="ark-admin"
-ARK_SERVER_FOLDER="ARKSERVER"
+USER_ACCOUNT="overseer"
+ARK_SERVER_FOLDER="server"
 
 # [ ARK: Survival Ascended Server Configuration ]
 MAP_NAME="TheIsland_WP"
@@ -45,7 +45,7 @@ GLOBAL_SPOILING_TIME_MULTIPLIER="1"
 # [ ARK: Survival Ascended Server Cluster Configuration ]
 NFS_IP_ADDRESS="192.168.1.5"
 NFS_FOLDER_PATH="/volume1/CLUSTER-PVE"
-CLUSTER_FOLDER="ClusterPVE"
+CLUSTER_FOLDER="cluster"
 CLUSTER_DIR_OVERRIDE="/home/${USER_ACCOUNT}/${CLUSTER_FOLDER}"
 MULTIHOME="192.168.1.105"
 CLUSTER_ID="FRANCESURVIVALSERVERSPVECLUSTER"

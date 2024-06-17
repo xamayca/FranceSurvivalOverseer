@@ -3,8 +3,8 @@ set -euo pipefail
 
 # [ Script ]
 SHOW_HEADER_SYSTEM_INFO="True"
-INSTALL_SCRIPT_VERSION="0.2.7"
-MANAGEMENT_SCRIPT_VERSION="0.1.3"
+INSTALLER_SCRIPT_VERSION="0.3.0"
+MANAGER_SCRIPT_VERSION="0.1.4"
 WEBSITE_URL="https://www.france-survival.fr/"
 GITHUB_URL="https://github.com/xamayca/ASCENDED-SERVER-DEBIAN12-PROTONGE"
 DISCORD_URL="https://discord.gg/F7pQyrRDd8"
@@ -19,7 +19,8 @@ ARK_SERVICE_PATH="/etc/systemd/system/$SERVER_SERVICE_NAME.service"
 WEB_SERVICE_NAME="$MAP_NAME-web"
 WEB_SERVICE_ALIAS="$MAP_NAME-web.service"
 WEB_SERVICE_PATH="/etc/systemd/system/$SERVER_SERVICE_NAME-web.service"
-MANAGEMENT_SCRIPT_PATH="/home/${USER_ACCOUNT}/manager/maintenance.sh"
+MANAGER_FOLDER_PATH="/home/${USER_ACCOUNT}/manager"
+MANAGER_SCRIPT_PATH="${MANAGER_FOLDER_PATH}/overseer.sh"
 DYNAMIC_CONFIG_DIR="/home/${USER_ACCOUNT}/manager/web/dynamic-config"
 CRONTAB_LOG_PATH="/home/${USER_ACCOUNT}/cron-$SERVER_SERVICE_NAME.log"
 
@@ -28,6 +29,8 @@ ARK_APP_ID="2430930"
 ARK_SERVER_PATH="/home/${USER_ACCOUNT}/${ARK_SERVER_FOLDER}"
 ARK_SERVER_EXECUTABLE="ArkAscendedServer.exe"
 ARK_SERVER_EXECUTABLE_PATH="${ARK_SERVER_PATH}/ShooterGame/Binaries/Win64/${ARK_SERVER_EXECUTABLE}"
+ARK_SERVER_MANIFEST_PATH="$ARK_SERVER_PATH/steamapps/appmanifest_$ARK_APP_ID.acf"
+ARK_LATEST_BUILD_ID="https://api.steamcmd.net/v1/info/$ARK_APP_ID"
 
 # [ Steam CMD ]
 STEAM_CMD_EXECUTABLE="steamcmd"
@@ -50,6 +53,15 @@ RCON_FOLDER="RCON"
 RCON_PATH="${ARK_SERVER_PATH}/${RCON_FOLDER}"
 RCON_EXECUTABLE="rcon"
 RCON_EXECUTABLE_PATH="${RCON_PATH}/${RCON_EXECUTABLE}"
+
+# [ Jours de la semaine ]
+DAY1="monday"
+DAY2="tuesday"
+DAY3="wednesday"
+DAY4="thursday"
+DAY5="friday"
+DAY6="saturday"
+DAY7="sunday"
 
 # [ Colors ]
 JUMP_LINE="\n"

@@ -44,9 +44,9 @@ create_dynamic(){
       log "[LOG] CRÉATION DE LA CONFIGURATION DYNAMIQUE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME..."
       check_variables
       check_gus_ini
-      service_create "web_server"
       update_command_line "add_simple_flag_params" "UseDynamicConfig" ""
       daemon_reload
+      service_create "web_server"
       log "[SUCCESS] LA CONFIGURATION DYNAMIQUE A ÉTÉ CRÉÉE AVEC SUCCÈS POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
       ;;
     [nN][oO]|[nN])

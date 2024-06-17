@@ -86,7 +86,7 @@ service_activation(){
 
 }
 
-ark_server_unit() {
+create_ark_server_unit() {
 
   COMMAND_LINE="${QUERY_PARAMS}${FLAG_PARAMS}"
 
@@ -132,7 +132,7 @@ EOF
 
 }
 
-web_server_unit() {
+create_web_server_unit() {
 
   if sudo tee "$WEB_SERVICE_PATH" > /dev/null <<EOF
 
@@ -175,7 +175,7 @@ service_create(){
     local alias="$SERVER_SERVICE_ALIAS"
 
     check_service_existence "$name" "$alias" "$path"
-    ark_server_unit
+    create_ark_server_unit
     daemon_reload
     service_activation "$name"
     service_commands_infos "$alias"
@@ -186,7 +186,7 @@ service_create(){
     local alias="$WEB_SERVICE_ALIAS"
 
     check_service_existence "$name" "$alias" "$path"
-    web_server_unit
+    create_web_server_unit
     daemon_reload
     service_activation "$name"
     service_commands_infos "$alias"

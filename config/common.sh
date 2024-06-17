@@ -21,7 +21,7 @@ WEB_SERVICE_ALIAS="$MAP_NAME-web.service"
 WEB_SERVICE_PATH="/etc/systemd/system/$SERVER_SERVICE_NAME-web.service"
 MANAGER_FOLDER_PATH="/home/${USER_ACCOUNT}/manager"
 MANAGER_SCRIPT_PATH="${MANAGER_FOLDER_PATH}/overseer.sh"
-DYNAMIC_CONFIG_DIR="${MANAGER_FOLDER_PATH}/web/dynamic-config"
+DYNAMIC_CONFIG_DIR="/home/${USER_ACCOUNT}/manager/web/dynamic-config"
 CRONTAB_LOG_PATH="/home/${USER_ACCOUNT}/cron-$SERVER_SERVICE_NAME.log"
 
 # [ ARK: Survival Ascended Server Installation ]

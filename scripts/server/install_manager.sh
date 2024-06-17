@@ -159,6 +159,7 @@ install_manager() {
     copy_config_folder
     copy_assets_folder
     copy_tools_folder
+    copy_service_folder
     permission_manager
 
     user_manager_bashrc

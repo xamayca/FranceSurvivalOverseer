@@ -1,9 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-
 set_environment_variables(){
-  log "[LOG] DÉFINITION DES VARIABLES D'ENVIRONNEMENT POUR LA CRÉATION DE LA TÂCHE PLANIFIÉE..."
 
   set_term_variables(){
     log "[LOG] VÉRIFICATION & AJOUT DES VARIABLES TERM, SHELL & PATH DANS LA CRONTAB DE $USER_ACCOUNT..."
@@ -167,7 +165,7 @@ create_task(){
         log "[INFO] LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME N'A PAS ÉTÉ CRÉÉE."
         ;;
       *)
-        log "[ERROR] CHOIX INVALIDE: $choice. VEUILLEZ SAISIR O OU N."
+        log "[ERROR] CHOIX INVALIDE: $choice. VEUILLEZ SAISIR [O/o/N/n/Oui/Non] POUR CONTINUER."
         ;;
     esac
   else

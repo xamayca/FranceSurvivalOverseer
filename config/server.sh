@@ -62,6 +62,7 @@ NO_TRANSFER_FROM_FILTERING="Yes"
 
 # [ ARK: Survival Ascended Dynamic Configuration ]
 USE_DYNAMIC_CONFIG="Yes"
+DYNAMIC_CONFIG_URL="http://127.0.0.1:8080/dynamic-config/current/dyn.ini"
 
 # [ ARK: Survival Ascended Rates Configuration ]
 TAMING_SPEED_MULTIPLIER="3"

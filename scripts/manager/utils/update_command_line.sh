@@ -10,6 +10,8 @@ update_command_line() {
     add_query_params "$params" "$value"
   elif [ "$function_name" == "add_flag_params" ]; then
     add_flag_params "$params" "$value"
+  elif [ "$function_name" == "add_simple_flag_params" ]; then
+    add_simple_flag_params "$params"
   elif [ "$function_name" == "edit_params" ]; then
     edit_params "$params" "$value"
   else
@@ -56,6 +58,26 @@ add_flag_params() {
       log "[SUCCESS] LE PARAMÈTRE DE DRAPEAU $params=$value A ÉTÉ AJOUTÉ AVEC SUCCÈS AU SERVICE $SERVER_SERVICE_NAME."
     else
       log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE L'AJOUT DU PARAMÈTRE DE DRAPEAU $params=$value AU SERVICE $SERVER_SERVICE_NAME."
+      log "[DEBUG] VEUILLEZ VÉRIFIER LE FICHIER DE SERVICE $ARK_SERVICE_PATH."
+      exit 1
+    fi
+  fi
+}
+
+add_simple_flag_params() {
+  local params="$1"
+
+  # Ajout des paramètres de drapeau au service "-" a la fin de la ligne ExecStart
+  log "[LOG] VÉRIFICATION & AJOUT DES PARAMÈTRES DE DRAPEAU AU SERVICE $SERVER_SERVICE_NAME..."
+  if grep -q "$params" "$ARK_SERVICE_PATH"; then
+    log "[OK] LE PARAMÈTRE DE DRAPEAU $params EXISTE DÉJÀ DANS LE SERVICE $SERVER_SERVICE_NAME."
+  else
+    log "[WARNING] LE PARAMÈTRE DE DRAPEAU $params N'EXISTE PAS DANS LE SERVICE $SERVER_SERVICE_NAME."
+    log "[INFO] AJOUT DU PARAMÈTRE DE DRAPEAU $params AU SERVICE $SERVER_SERVICE_NAME..."
+    if sudo sed -i "/ExecStart/s|$| -$params|" "$ARK_SERVICE_PATH"; then
+      log "[SUCCESS] LE PARAMÈTRE DE DRAPEAU $params A ÉTÉ AJOUTÉ AVEC SUCCÈS AU SERVICE $SERVER_SERVICE_NAME."
+    else
+      log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE L'AJOUT DU PARAMÈTRE DE DRAPEAU $params AU SERVICE $SERVER_SERVICE_NAME."
       log "[DEBUG] VEUILLEZ VÉRIFIER LE FICHIER DE SERVICE $ARK_SERVICE_PATH."
       exit 1
     fi

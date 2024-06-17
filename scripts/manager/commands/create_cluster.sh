@@ -120,21 +120,21 @@ mount_nfs_cluster(){
     fi
   }
 
-    log "[LOG] VÉRIFICATION & CRÉATION DE LA CONNEXION AU NFS POUR LE CLUSTER SUR LE SERVEUR ARK: $SERVER_SERVICE_NAME..."
-    if mount | grep -q "$NFS_IP_ADDRESS:$NFS_FOLDER_PATH on $CLUSTER_DIR_OVERRIDE type nfs" && [[ -d "$CLUSTER_DIR_OVERRIDE" ]]; then
-      log "[OK] LE CLUSTER NFS EST DÉJÀ MONTÉ ET CONFIGURÉ SUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
-    else
-      log "[WARNING] LE CLUSTER NFS N'EST PAS MONTÉ ET CONFIGURÉ SUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
-      check_mount_point_communication
-      create_cluster_folder
-      cluster_dir_permissions
-      check_mount_point
-      auto_mount_cluster
-      update_auto_mount_cluster
-      daemon_reload
-      log "[SUCCESS] LE CLUSTER NFS A ÉTÉ MONTÉ ET CONFIGURÉ AVEC SUCCÈS SUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
-    fi
-  }
+  log "[LOG] VÉRIFICATION & CRÉATION DE LA CONNEXION AU NFS POUR LE CLUSTER SUR LE SERVEUR ARK: $SERVER_SERVICE_NAME..."
+  if mount | grep -q "$NFS_IP_ADDRESS:$NFS_FOLDER_PATH on $CLUSTER_DIR_OVERRIDE type nfs" && [[ -d "$CLUSTER_DIR_OVERRIDE" ]]; then
+    log "[OK] LE CLUSTER NFS EST DÉJÀ MONTÉ ET CONFIGURÉ SUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
+  else
+    log "[WARNING] LE CLUSTER NFS N'EST PAS MONTÉ ET CONFIGURÉ SUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
+    check_mount_point_communication
+    create_cluster_folder
+    cluster_dir_permissions
+    check_mount_point
+    auto_mount_cluster
+    update_auto_mount_cluster
+    daemon_reload
+    log "[SUCCESS] LE CLUSTER NFS A ÉTÉ MONTÉ ET CONFIGURÉ AVEC SUCCÈS SUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
+  fi
+}
 
 create_cluster(){
 
@@ -156,7 +156,7 @@ create_cluster(){
           log "[WARNING] LE CLUSTER NFS POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME N'A PAS ÉTÉ CRÉÉ."
           ;;
         *)
-          log "[ERROR] LA RÉPONSE N'EST PAS VALIDE, VEUILLEZ RÉESSAYER."
+          log "[ERROR] CHOIX INVALIDE: $choice. VEUILLEZ SAISIR [O/o/N/n/Oui/Non] POUR CONTINUER."
           create_cluster
           ;;
       esac

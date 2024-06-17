@@ -138,7 +138,7 @@ web_server_unit() {
 
 [Unit]
 Description="$WEB_SERVICE_NAME"
-After=network.target
+After=syslog.target network.target network-online.target nss-lookup.target
 
 [Service]
 Type=simple
@@ -170,9 +170,9 @@ service_create(){
   type=$1
 
   if [ "$type" == "ark_server" ]; then
-    name=$SERVER_SERVICE_NAME
-    path=$ARK_SERVICE_PATH
-    alias=$SERVER_SERVICE_ALIAS
+    local name="$SERVER_SERVICE_NAME"
+    local path="$ARK_SERVICE_PATH"
+    local alias="$SERVER_SERVICE_ALIAS"
 
     check_service_existence "$name" "$alias" "$path"
     ark_server_unit
@@ -181,9 +181,9 @@ service_create(){
     service_commands_infos "$alias"
 
   elif [ "$type" == "web_server" ]; then
-    name=$WEB_SERVICE_NAME
-    path=$WEB_SERVICE_PATH
-    alias=$WEB_SERVICE_ALIAS
+    local name="$WEB_SERVICE_NAME"
+    local path="$WEB_SERVICE_PATH"
+    local alias="$WEB_SERVICE_ALIAS"
 
     check_service_existence "$name" "$alias" "$path"
     web_server_unit

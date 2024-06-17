@@ -16,12 +16,12 @@ SYSTEM_TIMEZONE="Europe/Paris"
 SERVER_SERVICE_NAME="AscendedServer$MAP_NAME"
 SERVER_SERVICE_ALIAS="$MAP_NAME.service"
 ARK_SERVICE_PATH="/etc/systemd/system/$SERVER_SERVICE_NAME.service"
-WEB_SERVICE_NAME="$MAP_NAME-web"
+WEB_SERVICE_NAME="AscendedServer$MAP_NAME-web"
 WEB_SERVICE_ALIAS="$MAP_NAME-web.service"
 WEB_SERVICE_PATH="/etc/systemd/system/$SERVER_SERVICE_NAME-web.service"
 MANAGER_FOLDER_PATH="/home/${USER_ACCOUNT}/manager"
 MANAGER_SCRIPT_PATH="${MANAGER_FOLDER_PATH}/overseer.sh"
-DYNAMIC_CONFIG_DIR="/home/${USER_ACCOUNT}/manager/web/dynamic-config"
+DYNAMIC_CONFIG_DIR="${MANAGER_FOLDER_PATH}/web/dynamic-config"
 CRONTAB_LOG_PATH="/home/${USER_ACCOUNT}/cron-$SERVER_SERVICE_NAME.log"
 
 # [ ARK: Survival Ascended Server Installation ]
@@ -31,6 +31,12 @@ ARK_SERVER_EXECUTABLE="ArkAscendedServer.exe"
 ARK_SERVER_EXECUTABLE_PATH="${ARK_SERVER_PATH}/ShooterGame/Binaries/Win64/${ARK_SERVER_EXECUTABLE}"
 ARK_SERVER_MANIFEST_PATH="$ARK_SERVER_PATH/steamapps/appmanifest_$ARK_APP_ID.acf"
 ARK_LATEST_BUILD_ID="https://api.steamcmd.net/v1/info/$ARK_APP_ID"
+
+# [ ARK: Survival Ascended Server Configuration Files ]
+GUS_INI_FILE="GameUserSettings.ini"
+GUS_INI_PATH="${ARK_SERVER_PATH}/ShooterGame/Saved/Config/WindowsServer/${GUS_INI_FILE}"
+GAME_INI_FILE="Game.ini"
+GAME_INI_PATH="${ARK_SERVER_PATH}/ShooterGame/Saved/Config/WindowsServer/${GAME_INI_FILE}"
 
 # [ Steam CMD ]
 STEAM_CMD_EXECUTABLE="steamcmd"

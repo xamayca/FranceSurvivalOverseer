@@ -1,0 +1,69 @@
+#!/bin/bash
+set -euo pipefail
+
+check_variables(){
+  log "[LOG] VÉRIFICATION & VALIDATION DES VARIABLES DE CONFIGURATION POUR LE CLUSTER DYNAMIQUE..."
+  if [ -z "$USE_DYNAMIC_CONFIG" ]; then
+    log "[ERROR] VEUILLEZ DÉFINIR L'UTILISATION DE LA CONFIGURATION DYNAMIQUE DANS LA VARIABLE USE_DYNAMIC_CONFIG DU FICHIER DE CONFIGURATION."
+    log "[INFO] EXEMPLE D'UTILISATION DE LA CONFIGURATION DYNAMIQUE: Yes"
+    exit 1
+  elif [ -d "$DYNAMIC_CONFIG_DIR" ]; then
+    log "[ERROR] LE DOSSIER DE CONFIGURATION DYNAMIQUE N'EXISTE PAS DANS LE RÉPERTOIRE $DYNAMIC_CONFIG_DIR."
+    log "[INFO] EXEMPLE DE DOSSIER DE CONFIGURATION DYNAMIQUE: /home/overseer/dynamic"
+    exit 1
+  fi
+  log "[SUCCESS] TOUTES LES VARIABLES DE CONFIGURATION SONT DÉFINIES CORRECTEMENT."
+}
+
+check_gus_ini(){
+  log "[LOG] VÉRIFICATION DE LA PRÉSENCE DE CustomDynamicConfigUrl DANS LE FICHIER $GUS_INI_FILE..."
+  if grep -q "CustomDynamicConfigUrl" "$GUS_INI_PATH"; then
+    log "[OK] CustomDynamicConfigUrl EST DÉJÀ DÉFINI DANS LE FICHIER $GUS_INI_FILE."
+  else
+    log "[WARNING] CustomDynamicConfigUrl N'EST PAS DÉFINI DANS LE FICHIER $GUS_INI_FILE."
+    log "[LOG] AJOUT DE CustomDynamicConfigUrl DANS LE FICHIER $GUS_INI_FILE..."
+    # Ajout de CustomDynamicConfigUrl dans le fichier GUS sous [ServerSettings]
+    if sudo sed -i "/\[ServerSettings\]/a CustomDynamicConfigUrl=\"${DYNAMIC_CONFIG_URL}\"" "$GUS_INI_PATH"; then
+      log "[SUCCESS] CustomDynamicConfigUrl A ÉTÉ AJOUTÉ AVEC SUCCÈS DANS LE FICHIER $GUS_INI_FILE."
+    else
+      log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE L'AJOUT DE CustomDynamicConfigUrl DANS LE FICHIER $GUS_INI_FILE."
+      log "[DEBUG] VEUILLEZ VÉRIFIER LE FICHIER DE CONFIGURATION $GUS_INI_PATH."
+      exit 1
+    fi
+  fi
+}
+
+create_dynamic(){
+
+  log "[WARNING] VOULEZ VOUS UTILISER LA CONFIGURATION DYNAMIQUE POUR CE SERVEUR ARK: $SERVER_SERVICE_NAME ?"
+  log "[ATTENTION] LA CONFIGURATION DYNAMIQUE PERMET DE MODIFIER LES PARAMÈTRES DE CONFIGURATION SANS REDÉMARRER LE SERVEUR."
+  log "[ATTENTION] VEUILLEZ VOUS ASSURER QUE UseDynamicConfig EST DÉFINI À Yes DANS LE FICHIER DE CONFIGURATION Server.sh."
+  if read -r -p "Entrez votre choix [O/o/N/n/Oui/Non]: " choice; then
+    case $choice in
+    [oO][uU][iI]|[oO])
+      log "[LOG] CRÉATION DE LA CONFIGURATION DYNAMIQUE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME..."
+      check_variables
+      check_gus_ini
+      service_create "web_server"
+      update_command_line "add_simple_flag_params" "UseDynamicConfig" ""
+      daemon_reload
+      log "[SUCCESS] LA CONFIGURATION DYNAMIQUE A ÉTÉ CRÉÉE AVEC SUCCÈS POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
+      ;;
+    [nN][oO]|[nN])
+      log "[LOG] LA CONFIGURATION DYNAMIQUE NE SERA PAS UTILISÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
+      exit 0
+      ;;
+    *)
+      log "[ERROR] CHOIX INVALIDE: $choice. VEUILLEZ SAISIR [O/o/N/n/Oui/Non] POUR CONTINUER."
+      create_dynamic
+      ;;
+    esac
+  else
+    log "[ERROR] ERREUR LORS DE LA SAISIE DU CHOIX POUR L'UTILISATION DE LA CONFIGURATION DYNAMIQUE."
+    log "[DEBUG] VEUILLEZ SAISIR UNE RÉPONSE VALIDE: [O/o/N/n/Oui/Non]"
+    log "[DEBUG] VEUILLEZ RÉESSAYER POUR L'UTILISATION DE LA CONFIGURATION DYNAMIQUE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
+    log "[DEBUG] POUR POUR L'INSTALLATION DU CLUSTER NFS, SAISISSEZ O/o/Oui/oui POUR CONTINUER OU N/n/Non/non POUR ANNULER."
+    exit 1
+  fi
+
+}

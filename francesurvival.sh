@@ -10,11 +10,12 @@ CONFIG_DIR="$CURRENT_DIR/config"
 source "$CONFIG_DIR/server.sh"
 source "$CONFIG_DIR/common.sh"
 
-# Charge tous les scripts dans le répertoire des scripts et ses sous-répertoires, sauf ceux dans le répertoire 'manager'
+# Charge tous les scripts dans le répertoire des scripts et ses sous-répertoires.
 while IFS= read -r -d '' file; do
   # shellcheck source=$file
   source "$file"
 done < <(find "$SCRIPTS_DIR" -type f -name "*.sh" ! -path "*/manager/*" -print0)
+# Sauf ceux dans le répertoire 'manager'
 
 # Démarre l'installation
 header "installation"

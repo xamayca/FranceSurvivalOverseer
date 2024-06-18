@@ -8,7 +8,7 @@ install_curl(){
     log "[OK] LE PAQUET CURL EST DÉJÀ INSTALLÉ SUR $HOSTNAME."
     curl -V 2>&1 | grep -o "curl [0-9.]*"
   else
-    log "[WARNING] LE PAQUET CURL N'EST PAS INSTALLÉ SUR $HOSTNAME, INSTALLATION EN COURS..."
+    log "[WARNING] LE PAQUET CURL N'EST PAS INSTALLÉ SUR $HOSTNAME, INSTALLATION EN COURS."
     if sudo apt-get install curl -y; then
       log "[SUCCESS] LE PAQUET CURL A ÉTÉ INSTALLÉ AVEC SUCCÈS SUR $HOSTNAME."
       curl -V 2>&1 | grep -o "curl [0-9.]*"

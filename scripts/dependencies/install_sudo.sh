@@ -8,7 +8,7 @@ install_sudo(){
     log "[OK] LE PAQUET SUDO EST DÉJÀ INSTALLÉ SUR $HOSTNAME."
     sudo -V | grep -o "Sudo version [0-9.]*"
   else
-    log "[WARNING] LE PAQUET SUDO N'EST PAS INSTALLÉ SUR $HOSTNAME, INSTALLATION EN COURS..."
+    log "[WARNING] LE PAQUET SUDO N'EST PAS INSTALLÉ SUR $HOSTNAME, INSTALLATION EN COURS."
     if apt-get install sudo -y; then
       log "[SUCCESS] LE PAQUET SUDO A ÉTÉ INSTALLÉ AVEC SUCCÈS SUR $HOSTNAME."
       sudo -V | grep -o "Sudo version [0-9.]*"

@@ -5,7 +5,7 @@ server_installation(){
 
   server=(
     "install_steam_cmd"
-    "install_ark_server"
+    "install_server"
     "install_rcon_cli"
     "install_proton_ge"
     "install_command_line"

@@ -2,12 +2,11 @@
 set -euo pipefail
 
 install_non_free_repo(){
-
   log "[LOG] VÉRIFICATION & AJOUT DES DÉPÔTS NON FREE SUR $HOSTNAME..."
-  if find /etc/apt/sources.list.d/ -type f -name '*.list' -exec grep -q "$NON_FREE_REPO" {} \; ; then
+  if grep -q "$NON_FREE_REPO" /etc/apt/sources.list; then
     log "[OK] LES DÉPÔTS NON FREE SONT DÉJÀ AJOUTÉS SUR $HOSTNAME."
   else
-    log "[WARNING] LES DÉPÔTS NON FREE NE SONT PAS ENCORE AJOUTÉS SUR $HOSTNAME, AJOUT EN COURS..."
+    log "[WARNING] LES DÉPÔTS NON FREE NE SONT PAS ENCORE AJOUTÉS SUR $HOSTNAME, AJOUT EN COURS."
     if sudo add-apt-repository "deb $NON_FREE_REPO" -y; then
       log "[SUCCESS] LES DÉPÔTS NON FREE ONT ÉTÉ AJOUTÉS AVEC SUCCÈS SUR $HOSTNAME."
       system_update

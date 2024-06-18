@@ -85,12 +85,12 @@ add_simple_flag_params() {
 }
 
 edit_params() {
-  local params="$2"
-  local value="$3"
+  local params="$1"
+  local value="$2"
 
   log "[LOG] MODIFICATION DU SERVICE $SERVER_SERVICE_NAME AVEC LES PARAMÈTRES: $params=$value..."
   log "[INFO] SERVICE AVANT MODIFICATION..."
-  log "[INFO] $(grep "$params" "$ARK_SERVICE_PATH")"
+  grep "$params" "$ARK_SERVICE_PATH"
   if sudo sed -i "s|\($params=\)[^?]*|\1$value|" "$ARK_SERVICE_PATH"; then
       log "[SUCCESS] MODIFICATION DE $params=$value POUR LE SERVICE $SERVER_SERVICE_NAME RÉUSSIE."
       log "[INFO] SERVICE APRÈS MODIFICATION..."

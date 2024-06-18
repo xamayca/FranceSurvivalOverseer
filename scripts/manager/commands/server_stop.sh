@@ -9,6 +9,7 @@ stop() {
     if grep -q "Restart=no" "$ARK_SERVICE_PATH"; then
       log "[OK] LE REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME EST DÉJÀ CONFIGURÉ SUR: no."
     else
+      log "[WARNING] LE REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME N'EST PAS CONFIGURÉ SUR: no."
       service_edit "exec_stop" "$SERVER_SERVICE_NAME" "/usr/bin/pkill -f $ARK_SERVER_EXECUTABLE" "$ARK_SERVICE_PATH"
       service_edit "restart" "$SERVER_SERVICE_NAME" "no" "$ARK_SERVICE_PATH"
       daemon_reload

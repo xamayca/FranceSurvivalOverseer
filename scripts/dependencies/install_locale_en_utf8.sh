@@ -6,7 +6,7 @@ install_locale_en_utf8(){
   uncomment_locale_gen_file() {
     log "[LOG] VÉRIFICATION & DÉCOMMENTAIRE DE LA LOCALE EN_US.UTF-8 DANS LE FICHIER /etc/locale.gen..."
     if sudo grep -q '^# *en_US.UTF-8 UTF-8' /etc/locale.gen; then
-      log "[WARNING] LA LOCALE EN_US.UTF-8 N'EST PAS DÉCOMMENTÉE DANS LE FICHIER /etc/locale.gen, DÉCOMMENTAIRE EN COURS..."
+      log "[WARNING] LA LOCALE EN_US.UTF-8 N'EST PAS DÉCOMMENTÉE DANS LE FICHIER /etc/locale.gen, DÉCOMMENTAIRE EN COURS."
       if sudo sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen; then
         log "[SUCCESS] LA LOCALE EN_US.UTF-8 A ÉTÉ DÉCOMMENTÉE AVEC SUCCÈS."
       else
@@ -48,7 +48,7 @@ install_locale_en_utf8(){
   if locale -a | grep -iq '^en_US\.utf8$'; then
     log "[OK] LA LOCALE EN_US.UTF-8 EST DÉJÀ AJOUTÉE SUR $HOSTNAME."
   else
-    log "[WARNING] LA LOCALE EN_US.UTF-8 N'EST PAS AJOUTÉE SUR $HOSTNAME, AJOUT EN COURS..."
+    log "[WARNING] LA LOCALE EN_US.UTF-8 N'EST PAS AJOUTÉE SUR $HOSTNAME, AJOUT EN COURS."
     uncomment_locale_gen_file
     locale_gen_en_utf8
     update_locale

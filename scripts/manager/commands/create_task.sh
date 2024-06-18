@@ -64,26 +64,26 @@ new_cron_task_create(){
 
   local new_cron_task="$task_minute $task_hour $task_day_of_month $task_month $task_day $MANAGER_SCRIPT_PATH $task_function >> $CRONTAB_LOG_PATH 2>&1 # $task_name - $task_description"
 
-  log "[LOG] VÉRIFICATION & AJOUT DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME DANS LA CRONTAB DE $USER_ACCOUNT..."
+  log "[LOG] VÉRIFICATION & AJOUT DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME DANS LA CRONTAB DE $USER_ACCOUNT..."
   if sudo -u "$USER_ACCOUNT" crontab -l | grep -Fxq "$new_cron_task"; then
-    log "[OK] LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME EXISTE DÉJÀ DANS LA CRONTAB DE $USER_ACCOUNT."
+    log "[OK] LA TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME EXISTE DÉJÀ DANS LA CRONTAB DE $USER_ACCOUNT."
     log "[INFO] VOICI LA TÂCHE PLANIFIÉE EXISTANTE: $new_cron_task"
   else
-    log "[WARNING] LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME N'EXISTE PAS DANS LA CRONTAB DE $USER_ACCOUNT."
-    log "[LOG] AJOUT DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME DANS LA CRONTAB DE $USER_ACCOUNT..."
+    log "[WARNING] LA TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME N'EXISTE PAS DANS LA CRONTAB DE $USER_ACCOUNT."
+    log "[LOG] AJOUT DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME DANS LA CRONTAB DE $USER_ACCOUNT..."
     if sudo -u "$USER_ACCOUNT" crontab -l | { cat; echo "$new_cron_task"; } | sudo -u "$USER_ACCOUNT" crontab -; then
-      log "[SUCCESS] TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME AJOUTÉE AVEC SUCCÈS DANS LA CRONTAB DE $USER_ACCOUNT."
+      log "[SUCCESS] TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME AJOUTÉE AVEC SUCCÈS DANS LA CRONTAB DE $USER_ACCOUNT."
       log "[INFO] VOICI LA TÂCHE PLANIFIÉE AJOUTÉE: $new_cron_task"
     else
-      log "[ERROR] ERREUR LORS DE L'AJOUT DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME DANS LA CRONTAB DE $USER_ACCOUNT."
-      log "[DEBUG] VÉRIFIEZ SI LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME EST BIEN AJOUTÉE DANS LA CRONTAB AVEC LA COMMANDE SUIVANTE:"
+      log "[ERROR] ERREUR LORS DE L'AJOUT DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME DANS LA CRONTAB DE $USER_ACCOUNT."
+      log "[DEBUG] VÉRIFIEZ SI LA TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME EST BIEN AJOUTÉE DANS LA CRONTAB AVEC LA COMMANDE SUIVANTE:"
       log "[DEBUG] sudo -u $USER_ACCOUNT crontab -l"
     fi
   fi
 }
 
 create_task(){
-  log "[WARNING] VOULEZ VOUS CRÉER UNE TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME?"
+  log "[WARNING] VOULEZ VOUS CRÉER UNE TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME?"
   # si le choix est oui alors on demande autre chose
   if read -r -p "Entrez votre choix [O/o/N/n/Oui/Non]: " choice; then
     case $choice in
@@ -109,8 +109,8 @@ create_task(){
                     if read -r -p "Entrez le mois de la tâche planifiée (1-12): " task_month; then
                       log "[WARNING] QUELLE FONCTION VOULEZ VOUS EXÉCUTER DANS LA TÂCHE PLANIFIÉE?"
                       log "[INFO] update (Verifie les mise à jour et redemarre le serveur si necessaire)"
-                      log "[INFO] stop (Arrête le serveur ARK et le service)"
-                      log "[INFO] restart (Redémarre le serveur ARK et le service)"
+                      log "[INFO] stop (Arrête le serveur et le service)"
+                      log "[INFO] restart (Redémarre le serveur et le service)"
                       log "[INFO] daily_restart (redémarrage journalier du serveur)"
                       log "[INFO] purge_start (activation de la purge PVP et redémarrage du serveur)"
                       log "[INFO] purge_stop (désactivation de la purge PVP et redémarrage du serveur)"
@@ -128,7 +128,7 @@ create_task(){
                         if [[ " ${options[*]} " == *" $task_function "* ]]; then
                           break
                         elif [[ "$task_function" == "Quit" ]]; then
-                          log "[INFO] LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME N'A PAS ÉTÉ CRÉÉE, FERMETURE DU SCRIPT..."
+                          log "[INFO] LA TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME N'A PAS ÉTÉ CRÉÉE, FERMETURE DU SCRIPT..."
                           exit 0
                         else
                           log "[ERROR] CHOIX INVALIDE: $task_function. VEUILLEZ CHOISIR UNE FONCTION VALIDE."
@@ -140,29 +140,29 @@ create_task(){
                         new_cron_task_create
 
                     else
-                      log "[ERROR] ERREUR LORS DE LA SAISIE DU MOIS DE LA TÂCHE PLANIFIÉE."
+                      log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA SAISIE DU MOIS DE LA TÂCHE PLANIFIÉE."
                     fi
                   else
-                    log "[ERROR] ERREUR LORS DE LA SAISIE DU JOUR DU MOIS DE LA TÂCHE PLANIFIÉE."
+                    log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA SAISIE DU JOUR DU MOIS DE LA TÂCHE PLANIFIÉE."
                   fi
                 else
-                  log "[ERROR] ERREUR LORS DE LA SAISIE DE LA MINUTE DE LA TÂCHE PLANIFIÉE."
+                  log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA SAISIE DE LA MINUTE DE LA TÂCHE PLANIFIÉE."
                 fi
               else
-                log "[ERROR] ERREUR LORS DE LA SAISIE DE L'HEURE DE LA TÂCHE PLANIFIÉE."
+                log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA SAISIE DE L'HEURE DE LA TÂCHE PLANIFIÉE."
               fi
             else
-              log "[ERROR] ERREUR LORS DE LA SAISIE DU JOUR DE LA SEMAINE DE LA TÂCHE PLANIFIÉE."
+              log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA SAISIE DU JOUR DE LA TÂCHE PLANIFIÉE."
             fi
           else
-            log "[ERROR] ERREUR LORS DE LA SAISIE DE LA DESCRIPTION DE LA TÂCHE PLANIFIÉE."
+            log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA SAISIE DE LA DESCRIPTION DE LA TÂCHE PLANIFIÉE."
           fi
         else
-          log "[ERROR] ERREUR LORS DE LA SAISIE DU NOM DE LA TÂCHE PLANIFIÉE."
+          log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA SAISIE DU NOM DE LA TÂCHE PLANIFIÉE."
         fi
         ;;
       [nN][oO]|[nN])
-        log "[INFO] LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME N'A PAS ÉTÉ CRÉÉE."
+        log "[INFO] LA TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME N'A PAS ÉTÉ CRÉÉE."
         ;;
       *)
         log "[ERROR] CHOIX INVALIDE: $choice. VEUILLEZ SAISIR [O/o/N/n/Oui/Non] POUR CONTINUER."
@@ -170,7 +170,7 @@ create_task(){
     esac
   else
     log "[ERROR] ERREUR LORS DE LA SAISIE DU CHOIX DE CRÉATION DE LA TÂCHE PLANIFIÉE."
-    log "[DEBUG] VEUILLEZ RÉESSAYER LA CRÉATION DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR ARK: $SERVER_SERVICE_NAME."
+    log "[DEBUG] VEUILLEZ RÉESSAYER LA CRÉATION DE LA TÂCHE PLANIFIÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME."
     log "[DEBUG] POUR CRÉER UNE TÂCHE PLANIFIÉE, SAISISSEZ O/o/Oui/oui POUR CONTINUER OU N/n/Non/non POUR ANNULER."
     exit 1
   fi

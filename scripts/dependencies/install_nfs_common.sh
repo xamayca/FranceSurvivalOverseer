@@ -7,7 +7,7 @@ install_nfs_common(){
   if dpkg -s nfs-common &> /dev/null; then
     log "[OK] LE PAQUET NFS-COMMON EST DÉJÀ INSTALLÉ SUR $HOSTNAME."
   else
-    log "[WARNING] LE PAQUET NFS-COMMON N'EST PAS INSTALLÉ SUR $HOSTNAME, INSTALLATION EN COURS..."
+    log "[WARNING] LE PAQUET NFS-COMMON N'EST PAS INSTALLÉ SUR $HOSTNAME, INSTALLATION EN COURS."
     if sudo apt-get install nfs-common -y; then
       log "[SUCCESS] LE PAQUET NFS-COMMON A ÉTÉ INSTALLÉ AVEC SUCCÈS SUR $HOSTNAME."
     else

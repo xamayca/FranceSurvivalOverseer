@@ -11,7 +11,7 @@ install_timezone(){
     log "[OK] LE FUSEAU HORAIRE DE $HOSTNAME EST DÉJÀ CONFIGURÉ SUR $SYSTEM_TIMEZONE."
     timedatectl show --property=Timezone --value
   elif [[ "$server_timezone" != "$SYSTEM_TIMEZONE" ]];then
-    log "[WARNING] LE FUSEAU HORAIRE DE $HOSTNAME N'EST PAS CONFIGURÉ CORRECTEMENT, CONFIGURATION EN COURS..."
+    log "[WARNING] LE FUSEAU HORAIRE DE $HOSTNAME N'EST PAS CONFIGURÉ CORRECTEMENT, CONFIGURATION EN COURS."
     if timedatectl set-timezone "$SYSTEM_TIMEZONE"; then
       log "[SUCCESS] LE FUSEAU HORAIRE DE $HOSTNAME A ÉTÉ CONFIGURÉ AVEC SUCCÈS."
       timedatectl show --property=Timezone --value

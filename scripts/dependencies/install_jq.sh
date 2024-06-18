@@ -8,7 +8,7 @@ install_jq(){
     log "[OK] LE PAQUET JQ EST DÉJÀ INSTALLÉ SUR $HOSTNAME."
      jq -V
    else
-     log "[WARNING] LE PAQUET JQ N'EST PAS INSTALLÉ SUR $HOSTNAME, INSTALLATION EN COURS..."
+     log "[WARNING] LE PAQUET JQ N'EST PAS INSTALLÉ SUR $HOSTNAME, INSTALLATION EN COURS."
      if sudo apt-get install jq -y; then
        log "[SUCCESS] LE PAQUET JQ A ÉTÉ INSTALLÉ AVEC SUCCÈS SUR $HOSTNAME."
        jq -V

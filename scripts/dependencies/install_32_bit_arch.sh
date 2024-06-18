@@ -8,7 +8,7 @@ install_32_bit_arch(){
     log "[OK] L'ARCHITECTURE 32 BITS EST DÉJÀ ACTIVÉE SUR $HOSTNAME."
     dpkg --print-foreign-architectures | grep "i386"
   else
-    log "[WARNING] L'ARCHITECTURE 32 BITS N'EST PAS ACTIVÉE SUR $HOSTNAME, ACTIVATION EN COURS..."
+    log "[WARNING] L'ARCHITECTURE 32 BITS N'EST PAS ACTIVÉE SUR $HOSTNAME, ACTIVATION EN COURS."
     if dpkg --add-architecture i386; then
       log "[SUCCESS] L'ARCHITECTURE 32 BITS A ÉTÉ ACTIVÉE AVEC SUCCÈS SUR $HOSTNAME."
       dpkg --print-foreign-architectures | grep "i386"

@@ -8,7 +8,7 @@ install_spc(){
     log "[OK] LE PAQUET SOFTWARE PROPERTIES COMMON EST DÉJÀ INSTALLÉ SUR $HOSTNAME."
      dpkg -s software-properties-common | grep 'Version'
    else
-     log "[WARNING] LE PAQUET SOFTWARE PROPERTIES COMMON N'EST PAS INSTALLÉ SUR $HOSTNAME, INSTALLATION EN COURS..."
+     log "[WARNING] LE PAQUET SOFTWARE PROPERTIES COMMON N'EST PAS INSTALLÉ SUR $HOSTNAME, INSTALLATION EN COURS."
      if sudo apt-get install software-properties-common -y; then
        log "[SUCCESS] LE PAQUET SOFTWARE PROPERTIES COMMON A ÉTÉ INSTALLÉ AVEC SUCCÈS SUR $HOSTNAME."
        dpkg -s software-properties-common | grep 'Version'

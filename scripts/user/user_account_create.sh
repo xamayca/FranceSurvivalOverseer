@@ -8,7 +8,7 @@ user_account_create(){
     log "[OK] L'UTILISATEUR $USER_ACCOUNT EXISTE DÉJÀ SUR $HOSTNAME."
     id -u "$USER_ACCOUNT"
   else
-    log "[WARNING] L'UTILISATEUR $USER_ACCOUNT N'EXISTE PAS SUR $HOSTNAME, CRÉATION EN COURS..."
+    log "[WARNING] L'UTILISATEUR $USER_ACCOUNT N'EXISTE PAS SUR $HOSTNAME, CRÉATION EN COURS."
     sleep 1
     if sudo adduser "$USER_ACCOUNT" -c "ARK: Ascended Server" --gecos ""; then
       log "[SUCCESS] L'UTILISATEUR $USER_ACCOUNT A ÉTÉ CRÉÉ AVEC SUCCÈS SUR $HOSTNAME."

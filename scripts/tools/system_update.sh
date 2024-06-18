@@ -13,21 +13,18 @@ fi
 
 update(){
   log "[LOG] VÉRIFICATION DES MISES À JOUR DISPONIBLES EN COURS..."
-  # Vérifier si des mises à jour sont disponibles
   if $1 apt-get update && $1 apt-get upgrade --simulate && $1 apt-get dist-upgrade --simulate | grep -q "The following packages will be upgraded"; then
-    # Afficher un message indiquant qu'une mise à jour est disponible
-    log "[WARNING] UNE MISE À JOUR EST DISPONIBLE POUR VOTRE SYSTÈME."
+    log "[WARNING] UNE MISE À JOUR EST DISPONIBLE POUR $HOSTNAME."
   else
-    # Aucune mise à jour disponible
-    log "[OK] AUCUNE MISE À JOUR DISPONIBLE POUR VOTRE SYSTÈME."
+    log "[OK] AUCUNE MISE À JOUR DISPONIBLE POUR $HOSTNAME."
     return 0
   fi
 
   # Si des mises à jour sont disponibles, procéder à leur installation
   if $1 apt-get update && $1 apt-get upgrade -y && $1 apt-get dist-upgrade -y; then
-    log "[SUCCESS] MISES À JOUR INSTALLÉES AVEC SUCCÈS SUR VOTRE SYSTÈME."
+    log "[SUCCESS] MISES À JOUR INSTALLÉES AVEC SUCCÈS SUR $HOSTNAME."
   else
-    log "[ERROR] ERREUR LORS DE L'INSTALLATION DES MISES À JOUR."
+    log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE L'INSTALLATION DES MISES À JOUR SUR $HOSTNAME."
     log "[DEBUG] VEUILLEZ VÉRIFIER VOTRE CONNEXION INTERNET ET ESSAYER À NOUVEAU."
     exit 1
   fi

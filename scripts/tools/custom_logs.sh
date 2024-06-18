@@ -2,13 +2,6 @@
 set -euo pipefail
 
 log() {
-    declare -r BGREY="\033[1;30m"
-    declare -r BGREEN="\033[1;32m"
-    declare -r BYELLOW="\033[1;33m"
-    declare -r BRED="\033[1;31m"
-    declare -r BBLUE="\033[1;34m"
-    declare -r BCYAN="\033[1;36m"
-    declare -r RESET="\033[0m"
 
     # Crée une ligne de séparation avec des tirets
     local terminal_width
@@ -48,6 +41,9 @@ log() {
     elif [[ $message == *\[ATTENTION\]* ]]; then
         color="${BRED}"  # Bold yellow
         emoji="🟧"
+    elif [[ $message == *\[OVERSEER\]* ]]; then
+        color="${BMAGENTA}"  # Bold magenta
+        emoji="🤖"
     fi
 
     # Display the message with the appropriate color and emoji

@@ -3,28 +3,6 @@ set -euo pipefail
 
 install_manager() {
 
-    copy_folder() {
-      local folder_name=$1
-      local source_path=$2
-      local target_path=$3
-
-      log "[LOG] VÉRIFICATION & COPIE DU DOSSIER $folder_name DANS LE RÉPERTOIRE DE L'UTILISATEUR $USER_ACCOUNT..."
-      if [ -d "$target_path" ]; then
-        log "[OK] LE DOSSIER $folder_name EXISTE DÉJÀ DANS LE RÉPERTOIRE DE L'UTILISATEUR $USER_ACCOUNT."
-      else
-        log "[WARNING] LE DOSSIER $folder_name N'EXISTE PAS DANS LE RÉPERTOIRE DE L'UTILISATEUR $USER_ACCOUNT."
-        log "[LOG] COPIE DU DOSSIER $folder_name DANS LE RÉPERTOIRE DE L'UTILISATEUR $USER_ACCOUNT."
-        if sudo cp -r "$source_path" "$target_path"; then
-          log "[SUCCESS] COPIE DU DOSSIER $folder_name RÉUSSIE DANS LE RÉPERTOIRE DE L'UTILISATEUR $USER_ACCOUNT."
-        else
-          log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA COPIE DU DOSSIER $folder_name DANS LE RÉPERTOIRE DE L'UTILISATEUR $USER_ACCOUNT."
-          log "[DEBUG] VEUILLEZ COPIER LE DOSSIER $folder_name DANS LE RÉPERTOIRE DE L'UTILISATEUR $USER_ACCOUNT À L'AIDE DE LA COMMANDE SUIVANTE:"
-          log "[DEBUG] sudo cp -r $source_path $target_path"
-          exit 1
-        fi
-      fi
-    }
-
     permission_manager(){
       log "[LOG] VÉRIFICATION & AJOUT DES PERMISSIONS AU RÉPERTOIRE DE MANAGEMENT POUR L'UTILISATEUR $USER_ACCOUNT..."
       if sudo chown -R "$USER_ACCOUNT":"$USER_ACCOUNT" "/home/$USER_ACCOUNT/manager"; then
@@ -96,10 +74,10 @@ install_manager() {
     copy_folder "tools" "$SCRIPTS_DIR/tools" "$MANAGER_FOLDER_PATH/tools"
     copy_folder "assets" "$SCRIPTS_DIR/assets" "$MANAGER_FOLDER_PATH/assets"
     copy_folder "services" "$SCRIPTS_DIR/services" "$MANAGER_FOLDER_PATH/services"
+    copy_folder "units" "$SCRIPTS_DIR/units" "$MANAGER_FOLDER_PATH/units"
     copy_folder "config" "$CURRENT_DIR/config" "$MANAGER_FOLDER_PATH/config"
 
     permission_manager
-
     user_manager_bashrc
     load_bashrc
 

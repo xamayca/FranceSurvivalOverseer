@@ -22,16 +22,16 @@ header "manager"
 # Switch case pour l'exécution des commandes avec arguments [NE PAS MODIFIER]
 case "$1" in
   update)
-    handle_action "restart" "on-failure" "RCON_UPDATE"
+    commands_handler "update" "on-failure" "RCON_UPDATE"
     ;;
   stop)
-    handle_action "stop" "no" "RCON_STOP"
+    commands_handler "stop" "no" "RCON_STOP"
     ;;
   restart)
-    handle_action "restart" "on-failure" "RCON_RESTART"
+    commands_handler "restart" "on-failure" "RCON_RESTART"
     ;;
   daily_restart)
-    handle_action "restart" "on-failure" "RCON_DAILY_RESTART"
+    commands_handler "restart" "on-failure" "RCON_DAILY_RESTART"
     ;;
   purge_start)
     pvp_purge "activation" "False" "RCON_PURGE_START"
@@ -63,11 +63,14 @@ case "$1" in
   create_task)
     create_task
     ;;
-  create_cluster)
-    create_cluster
+  configure_cluster)
+    configure_server "cluster"
     ;;
-  create_dynamic)
-    create_dynamic
+  configure_dynamic)
+    configure_server "dynamic"
+    ;;
+  editor)
+    command_line_editor
     ;;
   *)
     log "[ERROR] VEUILLER FOURNIR UNE COMMANDE VALIDE POUR LE MANAGER $MANAGER_SCRIPT_VERSION"
@@ -76,7 +79,7 @@ case "$1" in
 esac
 
 
-log "[SUCCESS] L'OVERSEER A TERMINÉ L'EXÉCUTION DE LA COMMANDE $1"
+log "[OVERSEER] L'OVERSEER A TERMINÉ L'EXÉCUTION DE LA COMMANDE $1"
 exit 0
 
 

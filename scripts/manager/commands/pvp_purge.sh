@@ -22,27 +22,9 @@ pvp_purge() {
     service_edit "restart" "$SERVER_SERVICE_NAME" "on-failure" "$ARK_SERVICE_PATH"
   fi
 
-  daemon_reload
+  services_handler "reload" "$SERVER_SERVICE_NAME"
 
-  local messages=()
-  for i in {1..5}; do
-    message_var="${message_prefix}_MSG_$i"
-    if [ -n "${!message_var}" ]; then
-      messages+=("${!message_var}")
-    fi
-  done
-  local delays=(300 240 60 10 5)
-  send_rcon_messages messages[@] delays[@]
-  local commands=("SaveWorld" "DoExit")
-  rcon_execute_commands commands[@]
+  rcon_send_messages_and_execute_commands "$message_prefix"
 
-  log "[LOG] REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME POUR ${action^^} DE LA PURGE PVP..."
-  if sudo systemctl restart "$SERVER_SERVICE_NAME"; then
-    log "[SUCCESS] REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME RÉUSSI."
-  else
-    log "[ERROR] ERREUR LORS DU REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME."
-    log "[DEBUG] VEUILLEZ ESSAYER DE REDÉMARRER LE SERVICE MANUELLEMENT AVEC LA COMMANDE SUIVANTE:"
-    log "[DEBUG] sudo systemctl restart $SERVER_SERVICE_NAME"
-    exit 1
-  fi
+  services_handler "restart" "$SERVER_SERVICE_NAME"
 }

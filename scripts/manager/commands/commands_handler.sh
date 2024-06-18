@@ -32,35 +32,12 @@ compare_build_ids(){
     return 0
   else
     log "[WARNING] LE SERVEUR: $SERVER_SERVICE_NAME N'EST PAS À JOUR, MISE À JOUR EN COURS."
-
-    local messages=()
-      for i in {1..5}; do
-        message_var="RCON_UPDATE_MSG_$i"
-        if [ -n "${!message_var}" ]; then
-          messages+=("${!message_var}")
-        fi
-    done
-    local delays=(300 240 60 10 5)
-    send_rcon_messages messages[@] delays[@]
-    local commands=(
-      "SaveWorld"
-      "DoExit"
-    )
-    rcon_execute_commands commands[@]
-
-    log "[LOG] REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME POUR MISE À JOUR DU SERVEUR $SERVER_SERVICE_NAME..."
-    if sudo systemctl restart "$SERVER_SERVICE_NAME"; then
-      log "[SUCCESS] LE SERVICE $SERVER_SERVICE_NAME A ÉTÉ REDÉMARRÉ AVEC SUCCÈS."
-    else
-      log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DU REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME."
-      log "[DEBUG] VEUILLEZ ESSAYER DE REDÉMARRER LE SERVICE MANUELLEMENT AVEC LA COMMANDE SUIVANTE:"
-      log "[DEBUG] sudo systemctl restart $SERVER_SERVICE_NAME"
-      exit 1
-    fi
+    rcon_send_messages_and_execute_commands "RCON_UPDATE"
+    service_handler "restart" "$SERVER_SERVICE_NAME"
   fi
 }
 
-handle_action() {
+commands_handler() {
   local action=$1
   local restart_value=$2
   local message_prefix=$3
@@ -72,7 +49,7 @@ handle_action() {
     check_latest_build_id
     compare_build_ids
   else
-    log "[WARNING] $action DU SERVEUR: $SERVER_SERVICE_NAME SUR $HOSTNAME EN COURS..."
+    log "[WARNING] LA COMMANDE $action DU SERVICE $SERVER_SERVICE_NAME A ÉTÉ REÇUE."
     log "[LOG] VÉRIFICATION DE LA VALEUR DE Restart DANS LE FICHIER DE CONFIGURATION DU SERVICE..."
 
     if grep -q "Restart=$restart_value" "$ARK_SERVICE_PATH"; then
@@ -84,27 +61,10 @@ handle_action() {
       daemon_reload
     fi
 
-    local messages=()
-    for i in {1..5}; do
-      message_var="${message_prefix}_MSG_$i"
-      if [ -n "${!message_var}" ]; then
-        messages+=("${!message_var}")
-      fi
-    done
-    local delays=(300 240 60 10 5)
-    send_rcon_messages messages[@] delays[@]
-    local commands=("SaveWorld" "DoExit")
-    rcon_execute_commands commands[@]
+    rcon_send_messages_and_execute_commands "$message_prefix"
 
-    log "[LOG] $action DU SERVICE $SERVER_SERVICE_NAME EN COURS..."
-    if sudo systemctl "$action" "$SERVER_SERVICE_NAME"; then
-      log "[SUCCESS] $action DU SERVICE $SERVER_SERVICE_NAME RÉUSSI."
-    else
-      log "[ERROR] ERREUR LORS DU $action DU SERVICE $SERVER_SERVICE_NAME."
-      log "[DEBUG] VEUILLEZ ESSAYER DE $action LE SERVICE MANUELLEMENT AVEC LA COMMANDE SUIVANTE:"
-      log "[DEBUG] sudo systemctl $action $SERVER_SERVICE_NAME"
-      exit 1
-    fi
+    service_handler "$action" "$SERVER_SERVICE_NAME"
+
   fi
 }
 

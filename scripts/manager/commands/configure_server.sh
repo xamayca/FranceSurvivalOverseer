@@ -1,0 +1,228 @@
+#!/bin/bash
+set -euo pipefail
+
+configure_server(){
+  type=$1
+
+  if [ "$type" = "cluster" ]; then
+    configure_cluster
+  elif [ "$type" = "dynamic" ]; then
+    configure_dynamic
+  else
+    log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA CRÉATION DU SERVEUR: $SERVER_SERVICE_NAME."
+    log "[DEBUG] VEUILLEZ FOURNIR UN TYPE DE SERVEUR VALIDE SUIVANT:"
+    exit 1
+  fi
+}
+
+ask_for_restart_server(){
+    log "[WARNING] VOULEZ-VOUS REDÉMARRER LE SERVICE $SERVER_SERVICE_NAME POUR APPLIQUER LES MODIFICATIONS ?"
+    if read -r -p "Entrez votre choix [O/o/N/n/Oui/Non]: " choice; then
+      case $choice in
+        [oO][uU][iI]|[oO])
+          log "[WARNING] REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME EN COURS..."
+          commands_handler "restart" "on-failure" "RCON_RESTART"
+          ;;
+        [nN][oO][nN]|[nN])
+          log "[WARNING] LE SERVICE $SERVER_SERVICE_NAME N'A PAS ÉTÉ REDÉMARRÉ."
+          ;;
+        *)
+          log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DU REDÉMARRAGE DU SERVICE $SERVER_SERVICE_NAME."
+          exit 1
+          ;;
+      esac
+    fi
+}
+
+configure_cluster(){
+
+  mount_nfs_cluster(){
+
+    check_mount_point_communication(){
+      log "[LOG] VÉRIFICATION & COMMUNICATION AVEC LE POINT DE MONTAGE NFS A L'ADRESSE: $NFS_IP_ADDRESS..."
+      if sudo ping -c 1 -W 1 "$NFS_IP_ADDRESS" &>/dev/null; then
+        log "[SUCCESS] LE SERVEUR: $SERVER_SERVICE_NAME COMMUNIQUE CORRECTEMENT AVEC LE POINT DE MONTAGE NFS."
+      else
+        log "[ERROR] LE SERVEUR: SURVIVAL ASCENDED NE COMMUNIQUE PAS AVEC LE NFS."
+        log "[DEBUG] VEUILLEZ VÉRIFIER L'ADRESSE IP DU NFS DANS LE FICHIER DE CONFIGURATION."
+        exit 1
+      fi
+    }
+
+    create_cluster_folder(){
+      log "[LOG] VÉRIFICATION & CRÉATION DU RÉPERTOIRE DE CLUSTER SUR LE SERVEUR: $SERVER_SERVICE_NAME..."
+      if ! [[ -d "$CLUSTER_DIR_OVERRIDE" ]]; then
+        log "[WARNING] LE RÉPERTOIRE DE CLUSTER N'EXISTE PAS, CRÉATION EN COURS..."
+        if sudo mkdir -p -m 777 "$CLUSTER_DIR_OVERRIDE"; then
+          log "[SUCCESS] LE RÉPERTOIRE DE CLUSTER A ÉTÉ CRÉÉ AVEC SUCCÈS."
+        else
+          log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA CRÉATION DU RÉPERTOIRE DE CLUSTER."
+          log "[DEBUG] VEUILLEZ CRÉER LE RÉPERTOIRE DE CLUSTER À L'AIDE DE LA COMMANDE SUIVANTE:"
+          log "[DEBUG] sudo -u $USER_ACCOUNT mkdir -p -m 777 $CLUSTER_DIR_OVERRIDE"
+          exit 1
+        fi
+      else
+        log "[OK] LE RÉPERTOIRE DE CLUSTER EXISTE DÉJÀ SUR LE SERVEUR: $SERVER_SERVICE_NAME."
+      fi
+    }
+
+    cluster_dir_permissions(){
+      log "[LOG] VÉRIFICATION & CHANGEMENT DES PERMISSIONS DU RÉPERTOIRE DE CLUSTER SUR LE SERVEUR: $SERVER_SERVICE_NAME..."
+      if stat -c "%U" "$CLUSTER_DIR_OVERRIDE" | grep -q "$USER_ACCOUNT"; then
+        log "[OK] LE RÉPERTOIRE DE CLUSTER APPARTIENT À L'UTILISATEUR $USER_ACCOUNT."
+      else
+        log "[WARNING] LE RÉPERTOIRE DE CLUSTER N'APPARTIENT PAS À L'UTILISATEUR $USER_ACCOUNT, CHANGEMENT EN COURS..."
+        if sudo chown -R "$USER_ACCOUNT":"$USER_ACCOUNT" "$CLUSTER_DIR_OVERRIDE"; then
+          log "[SUCCESS] LE RÉPERTOIRE DE CLUSTER APPARTIENT MAINTENANT À L'UTILISATEUR $USER_ACCOUNT."
+        else
+          log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DU CHANGEMENT DE PROPRIÉTAIRE DU RÉPERTOIRE DE CLUSTER."
+          log "[DEBUG] VEUILLEZ CHANGER LE PROPRIÉTAIRE DU RÉPERTOIRE DE CLUSTER À L'AIDE DE LA COMMANDE SUIVANTE:"
+          log "[DEBUG] sudo chown -R $USER_ACCOUNT:$USER_ACCOUNT $CLUSTER_DIR_OVERRIDE"
+          exit 1
+        fi
+      fi
+    }
+
+    check_mount_point(){
+      log "[LOG] VÉRIFICATION & MONTAGE DU POINT DE MONTAGE NFS POUR LE CLUSTER SUR LE SERVEUR: $SERVER_SERVICE_NAME..."
+      if mount | grep -q "$NFS_IP_ADDRESS:$NFS_FOLDER_PATH on $CLUSTER_DIR_OVERRIDE type nfs"; then
+        log "[OK] LE POINT DE MONTAGE NFS POUR LE CLUSTER EST CORRECTEMENT MONTÉ SUR LE SERVEUR: $SERVER_SERVICE_NAME."
+      else
+        log "[WARNING] LE POINT DE MONTAGE NFS POUR LE CLUSTER N'EXISTE PAS SUR LE SERVEUR: $SERVER_SERVICE_NAME."
+        if sudo mount -t nfs -o vers=3,rw,hard "$NFS_IP_ADDRESS:$NFS_FOLDER_PATH" "$CLUSTER_DIR_OVERRIDE"; then
+          log "[SUCCESS] LE MONTAGE NFS POUR LE CLUSTER NFS A ÉTÉ MONTÉ AVEC SUCCÈS SUR $HOSTNAME."
+        else
+          log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DU MONTAGE NFS POUR LE CLUSTER SUR $HOSTNAME."
+          log "[DEBUG] VEUILLEZ MONTÉ LE CLUSTER NFS À L'AIDE DE LA COMMANDE SUIVANTE:"
+          log "[DEBUG] sudo mount -t nfs -o vers=3,rw,hard $NFS_IP_ADDRESS:$NFS_FOLDER_PATH $CLUSTER_DIR_OVERRIDE"
+          exit 1
+        fi
+      fi
+    }
+
+    auto_mount_cluster(){
+      log "[LOG] VÉRIFICATION & CONFIGURATION DE L'AUTO MONTAGE DU CLUSTER NFS SUR LE SERVEUR: $SERVER_SERVICE_NAME..."
+      if grep -q "$NFS_IP_ADDRESS:$NFS_FOLDER_PATH $CLUSTER_DIR_OVERRIDE nfs" /etc/fstab; then
+        log "[OK] L'AUTO MONTAGE DU CLUSTER NFS EST DÉJÀ CONFIGURÉ DANS /etc/fstab."
+      else
+        log "[WARNING] L'AUTO MONTAGE DU CLUSTER NFS N'EST PAS CONFIGURÉ DANS /etc/fstab, CONFIGURATION EN COURS..."
+        if echo "$NFS_IP_ADDRESS:$NFS_FOLDER_PATH $CLUSTER_DIR_OVERRIDE nfs defaults 0 0" | sudo tee -a /etc/fstab; then
+          log "[SUCCESS] L'AUTO MONTAGE DU CLUSTER NFS A ÉTÉ CONFIGURÉ DANS /etc/fstab AVEC SUCCÈS."
+        else
+          log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA CONFIGURATION DE L'AUTO MONTAGE DU CLUSTER NFS DANS /etc/fstab."
+          log "[DEBUG] VEUILLEZ CONFIGURER L'AUTO MONTAGE DU CLUSTER NFS DANS /etc/fstab À L'AIDE DE LA COMMANDE SUIVANTE:"
+          log "[DEBUG] echo $NFS_IP_ADDRESS:$NFS_FOLDER_PATH $CLUSTER_DIR_OVERRIDE nfs defaults 0 0 | sudo tee -a /etc/fstab"
+          exit 1
+        fi
+      fi
+    }
+
+    update_auto_mount_cluster(){
+      log "[LOG] MISE À JOUR DE L'AUTO MONTAGE DU CLUSTER NFS POUR LE SERVEUR: $SERVER_SERVICE_NAME..."
+      if sudo mount -a; then
+        log "[SUCCESS] L'AUTO MONTAGE DU CLUSTER NFS A ÉTÉ MIS À JOUR AVEC SUCCÈS."
+      else
+        log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA MISE À JOUR DE L'AUTO MONTAGE DU CLUSTER NFS."
+        log "[DEBUG] VEUILLEZ MISE À JOUR L'AUTO MONTAGE DU CLUSTER NFS À L'AIDE DE LA COMMANDE SUIVANTE:"
+        log "[DEBUG] sudo mount -a"
+        exit 1
+      fi
+    }
+
+    log "[LOG] VÉRIFICATION & CRÉATION DE LA CONNEXION AU NFS POUR LE CLUSTER SUR LE SERVEUR: $SERVER_SERVICE_NAME..."
+    if mount | grep -q "$NFS_IP_ADDRESS:$NFS_FOLDER_PATH on $CLUSTER_DIR_OVERRIDE type nfs" && [[ -d "$CLUSTER_DIR_OVERRIDE" ]]; then
+      log "[OK] LE CLUSTER NFS EST DÉJÀ MONTÉ ET CONFIGURÉ SUR LE SERVEUR: $SERVER_SERVICE_NAME."
+    else
+      log "[WARNING] LE CLUSTER NFS N'EST PAS MONTÉ ET CONFIGURÉ SUR LE SERVEUR: $SERVER_SERVICE_NAME."
+      check_mount_point_communication
+      create_cluster_folder
+      cluster_dir_permissions
+      check_mount_point
+      auto_mount_cluster
+      update_auto_mount_cluster
+      services_handler "reload" "nfs-cluster"
+      log "[SUCCESS] LE CLUSTER NFS A ÉTÉ MONTÉ ET CONFIGURÉ AVEC SUCCÈS SUR LE SERVEUR: $SERVER_SERVICE_NAME."
+    fi
+  }
+
+  log "[WARNING] VOULEZ VOUS CRÉER UN CLUSTER NFS POUR CE SERVEUR: $SERVER_SERVICE_NAME ?"
+  log "[ATTENTION] VÉRIFIER QUE LE RÉPERTOIRE PARTAGÉ SUR VOTRE SERVEUR NFS EST CRÉÉ ET CONFIGURÉ CORRECTEMENT."
+  log "[ATTENTION] VÉRIFIER LES AUTORISATIONS D'ACCÈS AU RÉPERTOIRE PARTAGÉ SUR VOTRE SERVEUR NFS VERS LE SERVEUR."
+  log "[ATTENTION] VÉRIFIER QUE LE PARE-FEU DE VOTRE SERVEUR NFS AUTORISE L'ACCÈS AU RÉPERTOIRE PARTAGÉ PAR LE SERVEUR."
+  log "[ATTENTION] VÉRIFIER QUE LES PORTS NFS SONT OUVERTS AUTORISÉS DANS LE PARE-FEU DE VOTRE SERVEUR NFS."
+
+    if read -r -p "Entrez votre choix [O/o/N/n/Oui/Non]: " choice; then
+      case $choice in
+        [oO][uU][iI]|[oO])
+          log "[WARNING] INSTALLATION DU CLUSTER NFS POUR LE SERVEUR: $SERVER_SERVICE_NAME EN COURS."
+
+          check_variables "MULTIHOME" "z" "VEUILLEZ DÉFINIR L'ADRESSE IP LOCALE DU SERVEUR DANS LA VARIABLE MULTIHOME DU FICHIER DE CONFIGURATION." "192.168.1.XX"
+          check_variables "CLUSTER_ID" "z" "VEUILLEZ DÉFINIR L'ID DU CLUSTER DANS LA VARIABLE CLUSTER_ID DU FICHIER DE CONFIGURATION." "YOURSERVERCLUSTERID"
+          check_variables "CLUSTER_DIR_OVERRIDE" "z" "VEUILLEZ DÉFINIR LE CHEMIN DU DOSSIER DE CLUSTER NFS DANS LA VARIABLE CLUSTER_DIR_OVERRIDE DU FICHIER DE CONFIGURATION." "/mnt/cluster"
+          check_variables "NFS_IP_ADDRESS" "z" "VEUILLEZ DÉFINIR L'ADRESSE IP POUR LE CLUSTER NFS DANS LA VARIABLE NFS_IP_ADDRESS DU FICHIER DE CONFIGURATION." "192.168.1.XX"
+          check_variables "NFS_FOLDER_PATH" "z" "VEUILLEZ DÉFINIR LE CHEMIN DU DOSSIER SUR LE NFS POUR LE CLUSTER NFS DANS LA VARIABLE NFS_FOLDER_PATH DU FICHIER DE CONFIGURATION." "/volume1/CLUSTER"
+
+          update_command_line "add_flag_params" "clusterid" "$CLUSTER_ID"
+          update_command_line "add_flag_params" "ClusterDirOverride" "$CLUSTER_DIR_OVERRIDE"
+          mount_nfs_cluster
+
+          ask_for_restart_server
+
+          ;;
+        [nN][oO]|[nN])
+          log "[WARNING] LE CLUSTER NFS POUR LE SERVEUR: $SERVER_SERVICE_NAME N'A PAS ÉTÉ CRÉÉ."
+          ;;
+        *)
+          log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE L'INSTALLATION DU CLUSTER NFS POUR LE SERVEUR: $SERVER_SERVICE_NAME."
+          log "[DEBUG] VEUILLEZ SAISIR UNE RÉPONSE VALIDE: [O/o/N/n/Oui/Non]"
+          configure_cluster
+          ;;
+      esac
+    else
+      log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE L'INSTALLATION DU CLUSTER NFS POUR LE SERVEUR: $SERVER_SERVICE_NAME."
+      log "[DEBUG] VEUILLEZ RÉESSAYER POUR L'INSTALLATION DU CLUSTER NFS POUR LE SERVEUR: $SERVER_SERVICE_NAME."
+      log "[DEBUG] POUR POUR L'INSTALLATION DU CLUSTER NFS, SAISISSEZ O/o/Oui/oui POUR CONTINUER OU N/n/Non/non POUR ANNULER."
+      exit 1
+    fi
+}
+
+configure_dynamic(){
+
+  log "[WARNING] VOULEZ VOUS UTILISER LA CONFIGURATION DYNAMIQUE POUR CE SERVEUR: $SERVER_SERVICE_NAME ?"
+  log "[ATTENTION] LA CONFIGURATION DYNAMIQUE PERMET DE MODIFIER LES PARAMÈTRES DE CONFIGURATION SANS REDÉMARRER LE SERVEUR."
+  log "[ATTENTION] VEUILLEZ VOUS ASSURER QUE UseDynamicConfig EST DÉFINI À Yes DANS LE FICHIER DE CONFIGURATION Server.sh."
+  if read -r -p "Entrez votre choix [O/o/N/n/Oui/Non]: " choice; then
+    case $choice in
+    [oO][uU][iI]|[oO])
+      log "[WARNING] CRÉATION DE LA CONFIGURATION DYNAMIQUE POUR LE SERVEUR: $SERVER_SERVICE_NAME..."
+
+      check_variables "USE_DYNAMIC_CONFIG" "z" "VEUILLEZ DÉFINIR L'UTILISATION DE LA CONFIGURATION DYNAMIQUE DANS LA VARIABLE USE_DYNAMIC_CONFIG DU FICHIER DE CONFIGURATION." "Yes"
+      check_variables "DYNAMIC_CONFIG_DIR" "d" "LE DOSSIER DE CONFIGURATION DYNAMIQUE N'EXISTE PAS DANS LE RÉPERTOIRE $DYNAMIC_CONFIG_DIR." "/home/overseer/dynamic"
+      update_gus_ini "CustomDynamicConfigUrl" "\"${DYNAMIC_CONFIG_URL}\""
+      update_command_line "add_simple_flag_params" "UseDynamicConfig" ""
+      services_handler "reload" "$SERVER_SERVICE_NAME"
+      service_create "web_server"
+
+      log "[SUCCESS] LA CONFIGURATION DYNAMIQUE A ÉTÉ CRÉÉE AVEC SUCCÈS POUR LE SERVEUR: $SERVER_SERVICE_NAME."
+
+      ask_for_restart_server
+
+      ;;
+    [nN][oO]|[nN])
+      log "[LOG] LA CONFIGURATION DYNAMIQUE NE SERA PAS UTILISÉE POUR LE SERVEUR: $SERVER_SERVICE_NAME."
+      exit 0
+      ;;
+    *)
+      log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA CRÉATION DE LA CONFIGURATION DYNAMIQUE POUR LE SERVEUR: $SERVER_SERVICE_NAME."
+      log "[DEBUG] VEUILLEZ SAISIR UNE RÉPONSE VALIDE: [O/o/N/n/Oui/Non]"
+      configure_dynamic
+      ;;
+    esac
+  else
+    log "[ERROR] UNE ERREUR S'EST PRODUITE LORS DE LA CRÉATION DE LA CONFIGURATION DYNAMIQUE POUR LE SERVEUR: $SERVER_SERVICE_NAME."
+    log "[DEBUG] VEUILLEZ RÉESSAYER POUR L'UTILISATION DE LA CONFIGURATION DYNAMIQUE POUR LE SERVEUR: $SERVER_SERVICE_NAME."
+    log "[DEBUG] POUR POUR L'INSTALLATION DU CLUSTER NFS, SAISISSEZ O/o/Oui/oui POUR CONTINUER OU N/n/Non/non POUR ANNULER."
+    exit 1
+  fi
+
+}

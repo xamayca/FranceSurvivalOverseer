@@ -74,7 +74,7 @@ case "$1" in
     ;;
   *)
     log "[ERROR] VEUILLER FOURNIR UNE COMMANDE VALIDE POUR LE MANAGER $MANAGER_SCRIPT_VERSION"
-    log "[INFOS] LES COMMANDES VALIDES SONT: {stop|restart|daily_restart|purge_start|purge_stop|update|dynamic_monday|dynamic_tuesday|dynamic_wednesday|dynamic_thursday|dynamic_friday|dynamic_saturday|dynamic_sunday|create_task|create_cluster|create_dynamic}"
+    log "[INFOS] LES COMMANDES VALIDES SONT: {stop|restart|daily_restart|purge_start|purge_stop|update|dynamic_monday|dynamic_tuesday|dynamic_wednesday|dynamic_thursday|dynamic_friday|dynamic_saturday|dynamic_sunday|create_task|configure_cluster|configure_dynamic}"
     ;;
 esac
 

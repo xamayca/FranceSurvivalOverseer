@@ -63,7 +63,7 @@ commands_handler() {
 
     rcon_send_messages_and_execute_commands "$message_prefix"
 
-    service_handler "$action" "$SERVER_SERVICE_NAME"
+    services_handler "$action" "$SERVER_SERVICE_NAME"
 
   fi
 }
